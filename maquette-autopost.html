@@ -1,0 +1,988 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AutoPost — Plateforme de publication</title>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #0d0f14;
+    --surface: #161920;
+    --surface2: #1e2230;
+    --border: #2a2f3d;
+    --accent: #e8ff47;
+    --accent2: #4f8eff;
+    --text: #f0f2f7;
+    --muted: #6b7280;
+    --success: #22c55e;
+    --warning: #f59e0b;
+    --danger: #ef4444;
+    --fb: #1877f2;
+    --ig: #e1306c;
+    --li: #0a66c2;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    font-family: 'DM Sans', sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+
+  /* LAYOUT */
+  .app { display: flex; min-height: 100vh; }
+  .sidebar {
+    width: 240px;
+    background: var(--surface);
+    border-right: 1px solid var(--border);
+    display: flex;
+    flex-direction: column;
+    position: fixed;
+    top: 0; left: 0; bottom: 0;
+    z-index: 100;
+  }
+  .logo {
+    padding: 28px 24px 20px;
+    border-bottom: 1px solid var(--border);
+  }
+  .logo-mark {
+    font-family: 'Syne', sans-serif;
+    font-weight: 800;
+    font-size: 22px;
+    letter-spacing: -0.5px;
+  }
+  .logo-mark span { color: var(--accent); }
+  .logo-sub { font-size: 11px; color: var(--muted); margin-top: 2px; letter-spacing: 0.5px; text-transform: uppercase; }
+
+  .nav { padding: 16px 12px; flex: 1; }
+  .nav-section { font-size: 10px; color: var(--muted); text-transform: uppercase; letter-spacing: 1px; padding: 12px 12px 6px; }
+  .nav-item {
+    display: flex; align-items: center; gap: 10px;
+    padding: 10px 12px;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 14px;
+    color: var(--muted);
+    transition: all 0.15s;
+    margin-bottom: 2px;
+  }
+  .nav-item:hover { background: var(--surface2); color: var(--text); }
+  .nav-item.active { background: var(--accent); color: #0d0f14; font-weight: 600; }
+  .nav-item .icon { width: 18px; text-align: center; }
+
+  .sidebar-footer {
+    padding: 16px;
+    border-top: 1px solid var(--border);
+  }
+  .user-card {
+    display: flex; align-items: center; gap: 10px;
+    padding: 10px;
+    background: var(--surface2);
+    border-radius: 8px;
+  }
+  .user-avatar {
+    width: 32px; height: 32px;
+    background: var(--accent);
+    border-radius: 8px;
+    display: flex; align-items: center; justify-content: center;
+    font-family: 'Syne', sans-serif;
+    font-weight: 700;
+    font-size: 13px;
+    color: #0d0f14;
+  }
+  .user-name { font-size: 13px; font-weight: 500; }
+  .user-role { font-size: 11px; color: var(--muted); }
+
+  .main { margin-left: 240px; flex: 1; }
+  .topbar {
+    height: 60px;
+    border-bottom: 1px solid var(--border);
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 0 32px;
+    background: var(--surface);
+    position: sticky; top: 0; z-index: 50;
+  }
+  .topbar-title { font-family: 'Syne', sans-serif; font-weight: 700; font-size: 18px; }
+  .btn {
+    padding: 8px 16px;
+    border-radius: 8px;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 14px;
+    font-weight: 500;
+    cursor: pointer;
+    border: none;
+    transition: all 0.15s;
+  }
+  .btn-primary { background: var(--accent); color: #0d0f14; }
+  .btn-primary:hover { background: #d4e83c; transform: translateY(-1px); }
+  .btn-secondary { background: var(--surface2); color: var(--text); border: 1px solid var(--border); }
+  .btn-secondary:hover { border-color: var(--accent); color: var(--accent); }
+  .btn-sm { padding: 6px 12px; font-size: 13px; }
+
+  .content { padding: 32px; }
+
+  /* SCREENS */
+  .screen { display: none; }
+  .screen.active { display: block; }
+
+  /* STATS */
+  .stats-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; margin-bottom: 32px; }
+  .stat-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 20px;
+    position: relative;
+    overflow: hidden;
+    transition: border-color 0.2s;
+  }
+  .stat-card:hover { border-color: var(--accent); }
+  .stat-card::before {
+    content: '';
+    position: absolute;
+    top: 0; right: 0;
+    width: 60px; height: 60px;
+    background: var(--accent);
+    opacity: 0.04;
+    border-radius: 0 12px 0 60px;
+  }
+  .stat-label { font-size: 12px; color: var(--muted); text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 8px; }
+  .stat-value { font-family: 'Syne', sans-serif; font-size: 28px; font-weight: 800; }
+  .stat-sub { font-size: 12px; color: var(--muted); margin-top: 4px; }
+  .stat-badge { display: inline-block; font-size: 11px; padding: 2px 8px; border-radius: 20px; margin-top: 6px; }
+  .badge-green { background: rgba(34,197,94,0.15); color: var(--success); }
+  .badge-yellow { background: rgba(245,158,11,0.15); color: var(--warning); }
+  .badge-red { background: rgba(239,68,68,0.15); color: var(--danger); }
+  .badge-blue { background: rgba(79,142,255,0.15); color: var(--accent2); }
+
+  /* TABLE */
+  .table-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    overflow: hidden;
+  }
+  .table-header {
+    padding: 18px 24px;
+    border-bottom: 1px solid var(--border);
+    display: flex; align-items: center; justify-content: space-between;
+  }
+  .table-title { font-family: 'Syne', sans-serif; font-weight: 600; font-size: 15px; }
+  table { width: 100%; border-collapse: collapse; }
+  th { font-size: 11px; text-transform: uppercase; letter-spacing: 0.5px; color: var(--muted); padding: 12px 24px; text-align: left; border-bottom: 1px solid var(--border); }
+  td { padding: 14px 24px; font-size: 14px; border-bottom: 1px solid rgba(42,47,61,0.5); }
+  tr:last-child td { border-bottom: none; }
+  tr:hover td { background: rgba(255,255,255,0.02); }
+
+  .status-dot { width: 8px; height: 8px; border-radius: 50%; display: inline-block; margin-right: 6px; }
+  .dot-green { background: var(--success); }
+  .dot-yellow { background: var(--warning); }
+  .dot-red { background: var(--danger); }
+
+  .platform-tags { display: flex; gap: 4px; }
+  .ptag {
+    font-size: 10px; font-weight: 600; padding: 2px 7px; border-radius: 4px;
+    text-transform: uppercase; letter-spacing: 0.5px;
+  }
+  .ptag-fb { background: rgba(24,119,242,0.2); color: #4f9cf9; }
+  .ptag-ig { background: rgba(225,48,108,0.2); color: #f06292; }
+  .ptag-li { background: rgba(10,102,194,0.2); color: #5ba4d4; }
+
+  .two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-top: 16px; }
+  .three-col { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 16px; margin-top: 16px; }
+
+  /* FORM */
+  .form-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 24px;
+  }
+  .form-section { margin-bottom: 24px; }
+  .form-label {
+    display: block;
+    font-size: 12px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    color: var(--muted);
+    margin-bottom: 8px;
+    font-weight: 500;
+  }
+  .form-input, .form-textarea, .form-select {
+    width: 100%;
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 10px 14px;
+    color: var(--text);
+    font-family: 'DM Sans', sans-serif;
+    font-size: 14px;
+    outline: none;
+    transition: border-color 0.15s;
+  }
+  .form-input:focus, .form-textarea:focus, .form-select:focus { border-color: var(--accent); }
+  .form-textarea { min-height: 100px; resize: vertical; }
+  .form-select { appearance: none; cursor: pointer; }
+
+  .upload-zone {
+    border: 2px dashed var(--border);
+    border-radius: 10px;
+    padding: 32px;
+    text-align: center;
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+  .upload-zone:hover { border-color: var(--accent); background: rgba(232,255,71,0.03); }
+  .upload-icon { font-size: 32px; margin-bottom: 8px; }
+  .upload-text { font-size: 14px; color: var(--muted); }
+  .upload-text strong { color: var(--accent); }
+
+  .image-preview { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; margin-top: 12px; }
+  .img-thumb {
+    aspect-ratio: 1;
+    border-radius: 8px;
+    overflow: hidden;
+    position: relative;
+    background: var(--surface2);
+    border: 1px solid var(--border);
+  }
+  .img-thumb img { width: 100%; height: 100%; object-fit: cover; opacity: 0.7; }
+  .img-thumb .img-label {
+    position: absolute; bottom: 0; left: 0; right: 0;
+    background: rgba(0,0,0,0.7);
+    font-size: 9px;
+    padding: 3px 6px;
+    text-align: center;
+    color: var(--muted);
+  }
+  .img-add {
+    aspect-ratio: 1;
+    border-radius: 8px;
+    border: 2px dashed var(--border);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 24px; color: var(--muted);
+    cursor: pointer;
+    transition: all 0.15s;
+  }
+  .img-add:hover { border-color: var(--accent); color: var(--accent); }
+
+  .garage-selector { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; max-height: 220px; overflow-y: auto; padding-right: 4px; }
+  .garage-chip {
+    padding: 8px 12px;
+    border-radius: 8px;
+    border: 1px solid var(--border);
+    background: var(--surface2);
+    font-size: 13px;
+    cursor: pointer;
+    transition: all 0.15s;
+    display: flex; align-items: center; gap: 6px;
+  }
+  .garage-chip:hover { border-color: var(--accent); }
+  .garage-chip.selected { border-color: var(--accent); background: rgba(232,255,71,0.08); color: var(--accent); }
+  .garage-chip.selected::before { content: '✓'; font-size: 11px; }
+
+  .select-all { font-size: 12px; color: var(--accent); cursor: pointer; }
+  .select-all:hover { text-decoration: underline; }
+
+  .platform-toggle { display: flex; gap: 10px; }
+  .ptoggle {
+    display: flex; align-items: center; gap: 8px;
+    padding: 10px 16px;
+    border-radius: 8px;
+    border: 1px solid var(--border);
+    cursor: pointer;
+    font-size: 13px;
+    font-weight: 500;
+    transition: all 0.15s;
+    flex: 1; justify-content: center;
+  }
+  .ptoggle.on-fb { border-color: var(--fb); background: rgba(24,119,242,0.12); color: #4f9cf9; }
+  .ptoggle.on-ig { border-color: var(--ig); background: rgba(225,48,108,0.12); color: #f06292; }
+  .ptoggle.on-li { border-color: var(--li); background: rgba(10,102,194,0.12); color: #5ba4d4; }
+
+  .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+
+  .tabs { display: flex; gap: 0; margin-bottom: 16px; border-bottom: 1px solid var(--border); }
+  .tab {
+    padding: 10px 20px;
+    font-size: 13px;
+    cursor: pointer;
+    color: var(--muted);
+    border-bottom: 2px solid transparent;
+    transition: all 0.15s;
+  }
+  .tab.active { color: var(--text); border-bottom-color: var(--accent); }
+  .tab:hover { color: var(--text); }
+  .tab-content { display: none; }
+  .tab-content.active { display: block; }
+
+  /* GARAGE SCREEN */
+  .garage-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; }
+  .garage-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 20px;
+    transition: border-color 0.2s;
+  }
+  .garage-card:hover { border-color: var(--border); }
+  .garage-card-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 14px; }
+  .garage-icon {
+    width: 40px; height: 40px;
+    background: var(--surface2);
+    border-radius: 10px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 18px;
+  }
+  .garage-name { font-family: 'Syne', sans-serif; font-weight: 600; font-size: 14px; margin-bottom: 2px; }
+  .garage-location { font-size: 12px; color: var(--muted); }
+  .garage-platforms { display: flex; gap: 4px; margin: 12px 0; }
+  .picon { width: 24px; height: 24px; border-radius: 6px; display: flex; align-items: center; justify-content: center; font-size: 12px; font-weight: 700; }
+  .picon-fb { background: rgba(24,119,242,0.2); color: #4f9cf9; }
+  .picon-ig { background: rgba(225,48,108,0.2); color: #f06292; }
+  .picon-li { background: rgba(10,102,194,0.2); color: #5ba4d4; }
+  .picon-off { background: var(--surface2); color: var(--muted); }
+  .garage-stats { display: flex; gap: 16px; font-size: 12px; color: var(--muted); border-top: 1px solid var(--border); padding-top: 12px; }
+  .garage-stats strong { color: var(--text); font-size: 15px; font-family: 'Syne', sans-serif; }
+
+  /* CONNEXION */
+  .connect-container { max-width: 480px; margin: 60px auto; }
+  .connect-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 40px;
+  }
+  .connect-logo { text-align: center; margin-bottom: 32px; }
+  .connect-title { font-family: 'Syne', sans-serif; font-weight: 800; font-size: 24px; text-align: center; margin-bottom: 4px; }
+  .connect-sub { font-size: 14px; color: var(--muted); text-align: center; margin-bottom: 32px; }
+  .connect-garage {
+    background: var(--surface2);
+    border-radius: 10px;
+    padding: 14px 16px;
+    display: flex; align-items: center; gap: 12px;
+    margin-bottom: 24px;
+    border: 1px solid var(--border);
+  }
+  .connect-garage-icon { font-size: 24px; }
+  .connect-garage-name { font-weight: 600; font-size: 15px; }
+  .connect-garage-city { font-size: 12px; color: var(--muted); }
+
+  .connect-platform {
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 14px 16px;
+    background: var(--surface2);
+    border-radius: 10px;
+    margin-bottom: 10px;
+    border: 1px solid var(--border);
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+  .connect-platform:hover { border-color: var(--border); }
+  .connect-platform.connected { border-color: var(--success); }
+  .connect-platform-left { display: flex; align-items: center; gap: 12px; }
+  .connect-platform-icon { width: 36px; height: 36px; border-radius: 8px; display: flex; align-items: center; justify-content: center; font-size: 16px; font-weight: 700; }
+  .connect-platform-name { font-size: 14px; font-weight: 500; }
+  .connect-platform-status { font-size: 12px; color: var(--muted); }
+  .connect-btn-sm {
+    font-size: 12px; padding: 6px 14px;
+    border-radius: 6px;
+    cursor: pointer;
+    font-family: 'DM Sans', sans-serif;
+  }
+  .connect-btn-action { background: var(--accent); color: #0d0f14; border: none; font-weight: 600; }
+  .connect-btn-done { background: rgba(34,197,94,0.15); color: var(--success); border: 1px solid rgba(34,197,94,0.3); }
+
+  .progress-bar { background: var(--surface2); border-radius: 4px; height: 4px; margin: 24px 0 8px; }
+  .progress-fill { height: 100%; border-radius: 4px; background: var(--accent); transition: width 0.4s; }
+  .progress-label { font-size: 12px; color: var(--muted); display: flex; justify-content: space-between; }
+
+  /* SCROLLBAR */
+  ::-webkit-scrollbar { width: 4px; }
+  ::-webkit-scrollbar-track { background: transparent; }
+  ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 4px; }
+
+  /* ANIMATIONS */
+  @keyframes fadeIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
+  .screen.active { animation: fadeIn 0.2s ease; }
+
+  .tag { display: inline-block; font-size: 11px; padding: 3px 9px; border-radius: 20px; background: var(--surface2); color: var(--muted); border: 1px solid var(--border); }
+  .chip-row { display: flex; gap: 6px; flex-wrap: wrap; }
+
+  .section-heading {
+    font-family: 'Syne', sans-serif;
+    font-weight: 700; font-size: 16px;
+    margin-bottom: 16px;
+    display: flex; align-items: center; justify-content: space-between;
+  }
+</style>
+</head>
+<body>
+<div class="app">
+
+  <!-- SIDEBAR -->
+  <aside class="sidebar">
+    <div class="logo">
+      <div class="logo-mark">Auto<span>Post</span></div>
+      <div class="logo-sub">Gestionnaire de publications</div>
+    </div>
+    <nav class="nav">
+      <div class="nav-section">Principal</div>
+      <div class="nav-item active" onclick="showScreen('dashboard', this)">
+        <span class="icon">◈</span> Tableau de bord
+      </div>
+      <div class="nav-item" onclick="showScreen('nouvelle', this)">
+        <span class="icon">＋</span> Nouvelle annonce
+      </div>
+      <div class="nav-item" onclick="showScreen('annonces', this)">
+        <span class="icon">≡</span> Toutes les annonces
+      </div>
+      <div class="nav-section">Comptes</div>
+      <div class="nav-item" onclick="showScreen('garages', this)">
+        <span class="icon">⬡</span> Garages
+      </div>
+      <div class="nav-item" onclick="showScreen('connexion', this)">
+        <span class="icon">⌁</span> Vue garage (client)
+      </div>
+    </nav>
+    <div class="sidebar-footer">
+      <div class="user-card">
+        <div class="user-avatar">AD</div>
+        <div>
+          <div class="user-name">Admin</div>
+          <div class="user-role">Gestionnaire</div>
+        </div>
+      </div>
+    </div>
+  </aside>
+
+  <!-- MAIN -->
+  <main class="main">
+
+    <!-- DASHBOARD -->
+    <div id="screen-dashboard" class="screen active">
+      <div class="topbar">
+        <div class="topbar-title">Tableau de bord</div>
+        <button class="btn btn-primary btn-sm" onclick="showScreen('nouvelle', document.querySelectorAll('.nav-item')[1])">+ Nouvelle annonce</button>
+      </div>
+      <div class="content">
+
+        <div class="stats-grid">
+          <div class="stat-card">
+            <div class="stat-label">Posts ce mois</div>
+            <div class="stat-value">187</div>
+            <div class="stat-sub">sur 200 prévus</div>
+            <div class="stat-badge badge-green">93% ✓</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-label">Garages actifs</div>
+            <div class="stat-value">47</div>
+            <div class="stat-sub">sur 50 connectés</div>
+            <div class="stat-badge badge-yellow">3 en attente</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-label">En attente</div>
+            <div class="stat-value">34</div>
+            <div class="stat-sub">posts planifiés</div>
+            <div class="stat-badge badge-blue">7 jours</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-label">Erreurs</div>
+            <div class="stat-value">2</div>
+            <div class="stat-sub">tokens expirés</div>
+            <div class="stat-badge badge-red">À corriger</div>
+          </div>
+        </div>
+
+        <div class="table-card">
+          <div class="table-header">
+            <div class="table-title">Publications récentes</div>
+            <div class="chip-row">
+              <span class="tag">Toutes</span>
+              <span class="tag">Publiées</span>
+              <span class="tag">Erreurs</span>
+            </div>
+          </div>
+          <table>
+            <thead>
+              <tr>
+                <th>Annonce</th>
+                <th>Garage</th>
+                <th>Plateformes</th>
+                <th>Date</th>
+                <th>Statut</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><strong>Peugeot 308 — 12 900€</strong><br><span style="font-size:12px;color:var(--muted)">3 images · Commun</span></td>
+                <td>Garage Martin, Lyon</td>
+                <td><div class="platform-tags"><span class="ptag ptag-fb">FB</span><span class="ptag ptag-ig">IG</span><span class="ptag ptag-li">LI</span></div></td>
+                <td style="font-size:13px">20 mars 2026<br><span style="color:var(--muted)">09:30</span></td>
+                <td><span class="status-dot dot-green"></span>Publiée</td>
+              </tr>
+              <tr>
+                <td><strong>Renault Clio V — 9 500€</strong><br><span style="font-size:12px;color:var(--muted)">4 images · Spécifique</span></td>
+                <td>AutoSud, Marseille</td>
+                <td><div class="platform-tags"><span class="ptag ptag-fb">FB</span><span class="ptag ptag-ig">IG</span></div></td>
+                <td style="font-size:13px">20 mars 2026<br><span style="color:var(--muted)">10:00</span></td>
+                <td><span class="status-dot dot-green"></span>Publiée</td>
+              </tr>
+              <tr>
+                <td><strong>Toyota Yaris — 11 200€</strong><br><span style="font-size:12px;color:var(--muted)">2 images · Commun</span></td>
+                <td>Garage Dupont, Paris</td>
+                <td><div class="platform-tags"><span class="ptag ptag-fb">FB</span><span class="ptag ptag-li">LI</span></div></td>
+                <td style="font-size:13px">21 mars 2026<br><span style="color:var(--muted)">09:00</span></td>
+                <td><span class="status-dot dot-yellow"></span>Planifiée</td>
+              </tr>
+              <tr>
+                <td><strong>BMW Série 3 — 22 000€</strong><br><span style="font-size:12px;color:var(--muted)">5 images · Spécifique</span></td>
+                <td>Premium Cars, Bordeaux</td>
+                <td><div class="platform-tags"><span class="ptag ptag-fb">FB</span><span class="ptag ptag-ig">IG</span><span class="ptag ptag-li">LI</span></div></td>
+                <td style="font-size:13px">19 mars 2026<br><span style="color:var(--muted)">14:00</span></td>
+                <td><span class="status-dot dot-red"></span>Erreur token</td>
+              </tr>
+              <tr>
+                <td><strong>Ford Focus — 8 900€</strong><br><span style="font-size:12px;color:var(--muted)">3 images · Commun</span></td>
+                <td>Garage Leblanc, Nantes</td>
+                <td><div class="platform-tags"><span class="ptag ptag-fb">FB</span><span class="ptag ptag-ig">IG</span></div></td>
+                <td style="font-size:13px">18 mars 2026<br><span style="color:var(--muted)">11:00</span></td>
+                <td><span class="status-dot dot-green"></span>Publiée</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- NOUVELLE ANNONCE -->
+    <div id="screen-nouvelle" class="screen">
+      <div class="topbar">
+        <div class="topbar-title">Nouvelle annonce</div>
+        <div style="display:flex;gap:8px">
+          <button class="btn btn-secondary btn-sm">Brouillon</button>
+          <button class="btn btn-primary btn-sm">Planifier →</button>
+        </div>
+      </div>
+      <div class="content">
+        <div style="display:grid;grid-template-columns:1fr 380px;gap:24px">
+
+          <!-- GAUCHE -->
+          <div>
+            <div class="form-card" style="margin-bottom:16px">
+              <div class="section-heading">Contenu de l'annonce</div>
+
+              <div class="form-section">
+                <label class="form-label">Titre de l'annonce (interne)</label>
+                <input type="text" class="form-input" placeholder="ex: Peugeot 308 — Garage Martin">
+              </div>
+
+              <div class="form-section">
+                <div class="tabs">
+                  <div class="tab active" onclick="switchTab(this,'fb')">Facebook / Instagram</div>
+                  <div class="tab" onclick="switchTab(this,'li')">LinkedIn</div>
+                </div>
+                <div class="tab-content active" id="tab-fb">
+                  <label class="form-label">Texte du post</label>
+                  <textarea class="form-textarea" placeholder="🚗 Belle opportunité ! Peugeot 308 1.2 PureTech 130ch, 2021, 42 000 km...&#10;&#10;✅ Contrôle technique OK&#10;✅ Garantie 6 mois&#10;&#10;Prix : 12 900€ — Contactez-nous !&#10;&#10;#occasion #voiture #garage"></textarea>
+                </div>
+                <div class="tab-content" id="tab-li">
+                  <label class="form-label">Texte du post LinkedIn</label>
+                  <textarea class="form-textarea" placeholder="Nous sommes heureux de vous présenter ce véhicule d'occasion sélectionné avec soin par notre équipe...&#10;&#10;Peugeot 308 1.2 PureTech 130ch · 2021 · 42 000 km&#10;Garantie 6 mois · Prix : 12 900€&#10;&#10;Pour plus d'informations, contactez notre équipe commerciale."></textarea>
+                </div>
+              </div>
+
+              <div class="form-section">
+                <label class="form-label">Images (2 à 5 images)</label>
+                <div class="image-preview">
+                  <div class="img-thumb">
+                    <div style="width:100%;height:100%;background:linear-gradient(135deg,#1e2230,#2a2f3d);display:flex;align-items:center;justify-content:center;font-size:24px">🚗</div>
+                    <div class="img-label">Extérieur avant</div>
+                  </div>
+                  <div class="img-thumb">
+                    <div style="width:100%;height:100%;background:linear-gradient(135deg,#1e2230,#2a2f3d);display:flex;align-items:center;justify-content:center;font-size:24px">🚙</div>
+                    <div class="img-label">Extérieur arrière</div>
+                  </div>
+                  <div class="img-thumb">
+                    <div style="width:100%;height:100%;background:linear-gradient(135deg,#1e2230,#2a2f3d);display:flex;align-items:center;justify-content:center;font-size:24px">🪑</div>
+                    <div class="img-label">Intérieur</div>
+                  </div>
+                  <div class="img-add" title="Ajouter une image">＋</div>
+                </div>
+                <div style="margin-top:10px">
+                  <input type="text" class="form-input" placeholder="Ou coller des liens Google Drive / URL directement...">
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- DROITE -->
+          <div>
+            <div class="form-card" style="margin-bottom:16px">
+              <div class="section-heading">Planification</div>
+              <div class="form-row">
+                <div>
+                  <label class="form-label">Date</label>
+                  <input type="date" class="form-input" value="2026-03-25">
+                </div>
+                <div>
+                  <label class="form-label">Heure</label>
+                  <input type="time" class="form-input" value="09:00">
+                </div>
+              </div>
+            </div>
+
+            <div class="form-card" style="margin-bottom:16px">
+              <div class="section-heading">
+                Plateformes
+              </div>
+              <div class="platform-toggle">
+                <div class="ptoggle on-fb" onclick="this.classList.toggle('on-fb');this.classList.toggle('')">
+                  <span>f</span> Facebook
+                </div>
+                <div class="ptoggle on-ig" onclick="this.classList.toggle('on-ig')">
+                  <span>◉</span> Instagram
+                </div>
+                <div class="ptoggle on-li" onclick="this.classList.toggle('on-li')">
+                  <span>in</span> LinkedIn
+                </div>
+              </div>
+            </div>
+
+            <div class="form-card">
+              <div class="section-heading">
+                Diffusion garages
+                <span class="select-all" onclick="toggleAll()">Tout sélectionner</span>
+              </div>
+              <div class="garage-selector" id="garageSelector">
+                <div class="garage-chip selected" onclick="this.classList.toggle('selected')">Garage Martin</div>
+                <div class="garage-chip selected" onclick="this.classList.toggle('selected')">AutoSud</div>
+                <div class="garage-chip" onclick="this.classList.toggle('selected')">Garage Dupont</div>
+                <div class="garage-chip selected" onclick="this.classList.toggle('selected')">Premium Cars</div>
+                <div class="garage-chip" onclick="this.classList.toggle('selected')">Leblanc Auto</div>
+                <div class="garage-chip selected" onclick="this.classList.toggle('selected')">Moto & Co</div>
+                <div class="garage-chip" onclick="this.classList.toggle('selected')">Nord Autos</div>
+                <div class="garage-chip selected" onclick="this.classList.toggle('selected')">Sud Garage</div>
+                <div class="garage-chip" onclick="this.classList.toggle('selected')">Ouest Auto</div>
+                <div class="garage-chip" onclick="this.classList.toggle('selected')">Est Garage</div>
+                <div class="garage-chip selected" onclick="this.classList.toggle('selected')">Paris Nord</div>
+                <div class="garage-chip" onclick="this.classList.toggle('selected')">Lyon Sud</div>
+                <div class="garage-chip" onclick="this.classList.toggle('selected')">Metz Auto</div>
+                <div class="garage-chip selected" onclick="this.classList.toggle('selected')">Angers Cars</div>
+                <div class="garage-chip" onclick="this.classList.toggle('selected')">Rennes Pro</div>
+              </div>
+              <div style="margin-top:10px;font-size:12px;color:var(--muted)">
+                <span id="selectedCount">8</span> garage(s) sélectionné(s)
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </div>
+
+    <!-- ANNONCES -->
+    <div id="screen-annonces" class="screen">
+      <div class="topbar">
+        <div class="topbar-title">Toutes les annonces</div>
+        <button class="btn btn-primary btn-sm" onclick="showScreen('nouvelle', document.querySelectorAll('.nav-item')[1])">+ Nouvelle</button>
+      </div>
+      <div class="content">
+        <div class="table-card">
+          <div class="table-header">
+            <div class="table-title">48 annonces</div>
+            <div class="chip-row">
+              <span class="tag">Toutes</span>
+              <span class="tag">Communes</span>
+              <span class="tag">Spécifiques</span>
+              <span class="tag">Brouillons</span>
+            </div>
+          </div>
+          <table>
+            <thead>
+              <tr>
+                <th>Annonce</th>
+                <th>Diffusion</th>
+                <th>Plateformes</th>
+                <th>Publication</th>
+                <th>Statut</th>
+                <th></th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><strong>Peugeot 308 — 12 900€</strong><br><span style="font-size:12px;color:var(--muted)">3 images</span></td>
+                <td><span class="tag">50 garages</span></td>
+                <td><div class="platform-tags"><span class="ptag ptag-fb">FB</span><span class="ptag ptag-ig">IG</span><span class="ptag ptag-li">LI</span></div></td>
+                <td style="font-size:13px">20 mars · 09:30</td>
+                <td><span class="status-dot dot-green"></span>Publiée</td>
+                <td><span style="color:var(--muted);cursor:pointer;font-size:12px">⋯</span></td>
+              </tr>
+              <tr>
+                <td><strong>Renault Clio V — 9 500€</strong><br><span style="font-size:12px;color:var(--muted)">4 images</span></td>
+                <td><span class="tag">3 garages</span></td>
+                <td><div class="platform-tags"><span class="ptag ptag-fb">FB</span><span class="ptag ptag-ig">IG</span></div></td>
+                <td style="font-size:13px">20 mars · 10:00</td>
+                <td><span class="status-dot dot-green"></span>Publiée</td>
+                <td><span style="color:var(--muted);cursor:pointer;font-size:12px">⋯</span></td>
+              </tr>
+              <tr>
+                <td><strong>Toyota Yaris — 11 200€</strong><br><span style="font-size:12px;color:var(--muted)">2 images</span></td>
+                <td><span class="tag">50 garages</span></td>
+                <td><div class="platform-tags"><span class="ptag ptag-fb">FB</span><span class="ptag ptag-li">LI</span></div></td>
+                <td style="font-size:13px">21 mars · 09:00</td>
+                <td><span class="status-dot dot-yellow"></span>Planifiée</td>
+                <td><span style="color:var(--muted);cursor:pointer;font-size:12px">⋯</span></td>
+              </tr>
+              <tr>
+                <td><strong>BMW Série 3 — 22 000€</strong><br><span style="font-size:12px;color:var(--muted)">5 images</span></td>
+                <td><span class="tag">1 garage</span></td>
+                <td><div class="platform-tags"><span class="ptag ptag-fb">FB</span><span class="ptag ptag-ig">IG</span><span class="ptag ptag-li">LI</span></div></td>
+                <td style="font-size:13px">19 mars · 14:00</td>
+                <td><span class="status-dot dot-red"></span>Erreur token</td>
+                <td><span style="color:var(--muted);cursor:pointer;font-size:12px">⋯</span></td>
+              </tr>
+              <tr>
+                <td><strong>Volkswagen Golf — 15 500€</strong><br><span style="font-size:12px;color:var(--muted)">3 images</span></td>
+                <td><span class="tag">12 garages</span></td>
+                <td><div class="platform-tags"><span class="ptag ptag-fb">FB</span><span class="ptag ptag-ig">IG</span></div></td>
+                <td style="font-size:13px">22 mars · 10:00</td>
+                <td><span class="status-dot dot-yellow"></span>Planifiée</td>
+                <td><span style="color:var(--muted);cursor:pointer;font-size:12px">⋯</span></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- GARAGES -->
+    <div id="screen-garages" class="screen">
+      <div class="topbar">
+        <div class="topbar-title">Garages</div>
+        <button class="btn btn-primary btn-sm">+ Ajouter un garage</button>
+      </div>
+      <div class="content">
+        <div class="garage-grid">
+
+          <div class="garage-card">
+            <div class="garage-card-header">
+              <div class="garage-icon">🏎️</div>
+              <span class="stat-badge badge-green">Actif</span>
+            </div>
+            <div class="garage-name">Garage Martin</div>
+            <div class="garage-location">📍 Lyon, 69001</div>
+            <div class="garage-platforms">
+              <div class="picon picon-fb">f</div>
+              <div class="picon picon-ig">◉</div>
+              <div class="picon picon-li">in</div>
+            </div>
+            <div class="garage-stats">
+              <div><strong>12</strong><br>posts/mois</div>
+              <div><strong>3</strong><br>par sem.</div>
+              <div><strong>48</strong><br>total</div>
+            </div>
+          </div>
+
+          <div class="garage-card">
+            <div class="garage-card-header">
+              <div class="garage-icon">🚗</div>
+              <span class="stat-badge badge-green">Actif</span>
+            </div>
+            <div class="garage-name">AutoSud</div>
+            <div class="garage-location">📍 Marseille, 13001</div>
+            <div class="garage-platforms">
+              <div class="picon picon-fb">f</div>
+              <div class="picon picon-ig">◉</div>
+              <div class="picon picon-off">in</div>
+            </div>
+            <div class="garage-stats">
+              <div><strong>8</strong><br>posts/mois</div>
+              <div><strong>2</strong><br>par sem.</div>
+              <div><strong>32</strong><br>total</div>
+            </div>
+          </div>
+
+          <div class="garage-card">
+            <div class="garage-card-header">
+              <div class="garage-icon">🚙</div>
+              <span class="stat-badge badge-yellow">En attente</span>
+            </div>
+            <div class="garage-name">Premium Cars</div>
+            <div class="garage-location">📍 Bordeaux, 33000</div>
+            <div class="garage-platforms">
+              <div class="picon picon-off">f</div>
+              <div class="picon picon-off">◉</div>
+              <div class="picon picon-off">in</div>
+            </div>
+            <div class="garage-stats">
+              <div><strong>—</strong><br>posts/mois</div>
+              <div><strong>—</strong><br>par sem.</div>
+              <div><strong>0</strong><br>total</div>
+            </div>
+          </div>
+
+          <div class="garage-card">
+            <div class="garage-card-header">
+              <div class="garage-icon">🏍️</div>
+              <span class="stat-badge badge-green">Actif</span>
+            </div>
+            <div class="garage-name">Leblanc Auto</div>
+            <div class="garage-location">📍 Nantes, 44000</div>
+            <div class="garage-platforms">
+              <div class="picon picon-fb">f</div>
+              <div class="picon picon-ig">◉</div>
+              <div class="picon picon-li">in</div>
+            </div>
+            <div class="garage-stats">
+              <div><strong>4</strong><br>posts/mois</div>
+              <div><strong>1</strong><br>par sem.</div>
+              <div><strong>16</strong><br>total</div>
+            </div>
+          </div>
+
+          <div class="garage-card">
+            <div class="garage-card-header">
+              <div class="garage-icon">🚕</div>
+              <span class="stat-badge badge-red">Erreur</span>
+            </div>
+            <div class="garage-name">Garage Dupont</div>
+            <div class="garage-location">📍 Paris, 75017</div>
+            <div class="garage-platforms">
+              <div class="picon picon-off">f</div>
+              <div class="picon picon-ig">◉</div>
+              <div class="picon picon-off">in</div>
+            </div>
+            <div class="garage-stats">
+              <div><strong>4</strong><br>posts/mois</div>
+              <div><strong>1</strong><br>par sem.</div>
+              <div><strong>24</strong><br>total</div>
+            </div>
+          </div>
+
+          <div class="garage-card" style="border:2px dashed var(--border);display:flex;align-items:center;justify-content:center;cursor:pointer;min-height:180px" onmouseover="this.style.borderColor='var(--accent)'" onmouseout="this.style.borderColor='var(--border)'">
+            <div style="text-align:center;color:var(--muted)">
+              <div style="font-size:32px;margin-bottom:8px">＋</div>
+              <div style="font-size:13px">Ajouter un garage</div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </div>
+
+    <!-- CONNEXION GARAGE (vue client) -->
+    <div id="screen-connexion" class="screen">
+      <div class="topbar">
+        <div class="topbar-title">Vue garage — Portail de connexion</div>
+        <span class="tag">Aperçu client</span>
+      </div>
+      <div class="content">
+        <div class="connect-container">
+          <div class="connect-card">
+            <div class="connect-logo">
+              <div class="logo-mark" style="font-size:26px;text-align:center">Auto<span style="color:var(--accent)">Post</span></div>
+            </div>
+            <div class="connect-title">Connectez vos réseaux</div>
+            <div class="connect-sub">Autorisez AutoPost à publier sur vos comptes.<br>Opération unique, 5 minutes.</div>
+
+            <div class="connect-garage">
+              <div class="connect-garage-icon">🚗</div>
+              <div>
+                <div class="connect-garage-name">Garage Martin</div>
+                <div class="connect-garage-city">Lyon, 69001</div>
+              </div>
+            </div>
+
+            <div class="progress-bar">
+              <div class="progress-fill" style="width:33%"></div>
+            </div>
+            <div class="progress-label">
+              <span>1 plateforme connectée sur 3</span>
+              <span style="color:var(--accent)">33%</span>
+            </div>
+
+            <div style="margin-top:20px">
+              <div class="connect-platform connected">
+                <div class="connect-platform-left">
+                  <div class="connect-platform-icon picon-fb" style="background:rgba(24,119,242,0.2);color:#4f9cf9;font-weight:700;font-size:16px;width:36px;height:36px;border-radius:8px;display:flex;align-items:center;justify-content:center">f</div>
+                  <div>
+                    <div class="connect-platform-name">Facebook</div>
+                    <div class="connect-platform-status" style="color:var(--success)">✓ Page "Garage Martin" connectée</div>
+                  </div>
+                </div>
+                <button class="connect-btn-sm connect-btn-done">Connecté</button>
+              </div>
+
+              <div class="connect-platform">
+                <div class="connect-platform-left">
+                  <div style="background:rgba(225,48,108,0.2);color:#f06292;font-size:14px;width:36px;height:36px;border-radius:8px;display:flex;align-items:center;justify-content:center">◉</div>
+                  <div>
+                    <div class="connect-platform-name">Instagram</div>
+                    <div class="connect-platform-status">Non connecté</div>
+                  </div>
+                </div>
+                <button class="connect-btn-sm connect-btn-action">Connecter</button>
+              </div>
+
+              <div class="connect-platform">
+                <div class="connect-platform-left">
+                  <div style="background:rgba(10,102,194,0.2);color:#5ba4d4;font-weight:700;font-size:12px;width:36px;height:36px;border-radius:8px;display:flex;align-items:center;justify-content:center">in</div>
+                  <div>
+                    <div class="connect-platform-name">LinkedIn</div>
+                    <div class="connect-platform-status">Non connecté</div>
+                  </div>
+                </div>
+                <button class="connect-btn-sm connect-btn-action">Connecter</button>
+              </div>
+            </div>
+
+            <div style="margin-top:24px;padding:12px;background:var(--surface2);border-radius:8px;font-size:12px;color:var(--muted);line-height:1.6">
+              🔒 Vos identifiants ne sont jamais stockés. L'autorisation passe par les systèmes officiels de chaque plateforme et peut être révoquée à tout moment.
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </main>
+</div>
+
+<script>
+function showScreen(name, navEl) {
+  document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+  document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+  document.getElementById('screen-' + name).classList.add('active');
+  if (navEl) navEl.classList.add('active');
+}
+
+function switchTab(el, id) {
+  document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+  document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
+  el.classList.add('active');
+  document.getElementById('tab-' + id).classList.add('active');
+}
+
+function toggleAll() {
+  const chips = document.querySelectorAll('.garage-chip');
+  const allSelected = Array.from(chips).every(c => c.classList.contains('selected'));
+  chips.forEach(c => allSelected ? c.classList.remove('selected') : c.classList.add('selected'));
+  updateCount();
+}
+
+document.querySelectorAll('.garage-chip').forEach(c => {
+  c.addEventListener('click', updateCount);
+});
+
+function updateCount() {
+  setTimeout(() => {
+    const count = document.querySelectorAll('.garage-chip.selected').length;
+    document.getElementById('selectedCount').textContent = count;
+  }, 50);
+}
+</script>
+</body>
+</html>
