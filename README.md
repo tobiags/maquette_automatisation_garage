@@ -3,7 +3,7 @@
 > Maquette interactive d'une solution de gestion et publication de contenu 
 > sur les réseaux sociaux pour un réseau de garages automobiles.
 
-**[→ Voir la maquette en live](https://maquette.votredomaine.fr)**
+**[→ Voir la maquette en live](https://autogarage.tobiasagossou.website)**
 
 ---
 
@@ -44,23 +44,3 @@ Le client avait besoin de visualiser l'interface avant validation interne du pro
 
 ---
 
-## Auteur
-
-**[Votre Nom]** — Développeur full-stack  
-[votre-site.fr](https://votre-site.fr) · [LinkedIn](https://linkedin.com/in/votre-profil)
-```
-
----
-
-**Ensuite, toujours sur GitHub, 3 petites choses :**
-
-1. **Description du repo** (roue crantée en haut à droite de "About") :
-```
-   Maquette interactive — Automatisation de publication réseaux sociaux pour garages automobiles
-```
-
-2. **Website** (même endroit) : votre lien Coolify / domaine
-
-3. **Topics** (même endroit) : ajouter des tags
-```
-   python django automation social-media portfolio maquette
