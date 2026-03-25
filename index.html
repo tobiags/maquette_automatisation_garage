@@ -251,8 +251,31 @@ tr:hover td{background:rgba(255,255,255,.015)}
           <div><label class="form-label">Téléphone</label><input type="text" class="form-input" value="+41 21 612 34 56"></div>
         </div>
         <div class="form-section">
-          <label class="form-label">Fréquence de publication</label>
-          <select class="form-select"><option>1 post / semaine</option><option>2 posts / semaine</option><option selected>3 posts / semaine</option></select>
+          <label class="form-label">Pack de publication</label>
+          <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;margin-top:4px" id="pack-selector">
+            <div class="pack-card" id="pack-base" onclick="selectPack('base')" style="border:2px solid var(--accent);background:rgba(37,99,235,.1);border-radius:10px;padding:14px;cursor:pointer;text-align:center;transition:all .15s">
+              <div style="font-family:'Syne',sans-serif;font-weight:700;font-size:14px;color:var(--accent-light);margin-bottom:4px">Base</div>
+              <div style="font-family:'Syne',sans-serif;font-weight:800;font-size:20px;color:var(--text)">150.-</div>
+              <div style="font-size:11px;color:var(--muted);margin-top:2px">CHF / mois</div>
+              <div style="font-size:12px;color:var(--text);margin-top:8px;padding-top:8px;border-top:1px solid var(--border)">1 post / semaine</div>
+              <div style="font-size:11px;color:var(--muted);margin-top:4px">4 posts / mois</div>
+            </div>
+            <div class="pack-card" id="pack-inter" onclick="selectPack('inter')" style="border:1px solid var(--border);background:var(--surface2);border-radius:10px;padding:14px;cursor:pointer;text-align:center;transition:all .15s">
+              <div style="font-family:'Syne',sans-serif;font-weight:700;font-size:14px;color:var(--warning);margin-bottom:4px">Intermédiaire</div>
+              <div style="font-family:'Syne',sans-serif;font-weight:800;font-size:20px;color:var(--text)">200.-</div>
+              <div style="font-size:11px;color:var(--muted);margin-top:2px">CHF / mois</div>
+              <div style="font-size:12px;color:var(--text);margin-top:8px;padding-top:8px;border-top:1px solid var(--border)">2 posts / semaine</div>
+              <div style="font-size:11px;color:var(--muted);margin-top:4px">8 posts / mois</div>
+            </div>
+            <div class="pack-card" id="pack-pro" onclick="selectPack('pro')" style="border:1px solid var(--border);background:var(--surface2);border-radius:10px;padding:14px;cursor:pointer;text-align:center;transition:all .15s">
+              <div style="font-family:'Syne',sans-serif;font-weight:700;font-size:14px;color:var(--success);margin-bottom:4px">Pro</div>
+              <div style="font-family:'Syne',sans-serif;font-weight:800;font-size:20px;color:var(--text)">250.-</div>
+              <div style="font-size:11px;color:var(--muted);margin-top:2px">CHF / mois</div>
+              <div style="font-size:12px;color:var(--text);margin-top:8px;padding-top:8px;border-top:1px solid var(--border)">3 posts / semaine</div>
+              <div style="font-size:11px;color:var(--muted);margin-top:4px">12 posts / mois</div>
+            </div>
+          </div>
+          <div style="margin-top:8px;font-size:12px;color:var(--muted)">Pack sélectionné : <span id="pack-label" style="color:var(--accent-light);font-weight:600">Base — 150.- CHF/mois · 1 post/semaine</span></div>
         </div>
       </div>
       <div class="form-card" style="margin-bottom:14px">
@@ -367,8 +390,8 @@ tr:hover td{background:rgba(255,255,255,.015)}
         <div class="form-card" style="margin-bottom:14px">
           <div class="section-heading">Contenu</div>
           <div class="form-row3" style="margin-bottom:18px">
-            <div><label class="form-label">Titre interne</label><input type="text" class="form-input" value="BMW 320d — Garage du Lac"></div>
-            <div><label class="form-label">Prix (CHF)</label><input type="text" class="form-input" value="32 900.-"></div>
+            <div><label class="form-label">Titre interne</label><input type="text" class="form-input" value="Mazda CX-5 — Garage du Lac"></div>
+            <div><label class="form-label">Prix (CHF)</label><input type="text" class="form-input" value="35 900.-"></div>
             <div><label class="form-label">Langue du post</label>
               <select class="form-select" id="post-lang">
                 <option value="fr">🇫🇷 Français</option>
@@ -384,36 +407,38 @@ tr:hover td{background:rgba(255,255,255,.015)}
             </div>
             <div class="tab-content active" id="tab-fb">
               <label class="form-label">Texte FB & Instagram</label>
-              <textarea class="form-textarea" id="text-fb-ig">🚗 Superbe opportunité ! BMW 320d xDrive, 2022, 38 000 km
+              <textarea class="form-textarea" id="text-fb-ig">🚗 Superbe opportunité ! Mazda CX-5 2.0 Skyactiv-G, 2023, 24 000 km
 
 ✅ Contrôle technique OK · Garantie 12 mois · Historique complet
-Prix : 32 900.- CHF
+Prix : 35 900.- CHF
 
 Contactez-nous : +41 21 612 34 56
 📍 Garage du Lac Sàrl — Lausanne
 
-#bmw #occasion #lausanne #dealerflow #automobile</textarea>
+#mazda #cx5 #occasion #lausanne #dealerflow #automobile</textarea>
             </div>
             <div class="tab-content" id="tab-li">
               <label class="form-label">Texte LinkedIn (ton professionnel)</label>
               <textarea class="form-textarea" id="text-li">Garage du Lac Sàrl est heureux de vous présenter ce véhicule d'occasion sélectionné avec soin.
 
-BMW 320d xDrive · 2022 · 38 000 km · Garantie 12 mois
-Prix : 32 900.- CHF
+Mazda CX-5 2.0 Skyactiv-G · 2023 · 24 000 km · Garantie 12 mois
+Prix : 35 900.- CHF
 
 Contact : +41 21 612 34 56 · Lausanne
-#automobile #vehiculeoccasion #lausanne #bmw</textarea>
+#mazda #cx5 #vehiculeoccasion #lausanne</textarea>
             </div>
           </div>
           <div class="form-section">
             <label class="form-label">Images (1 photo ou carrousel 2-5 images)</label>
-            <div class="image-preview">
-              <div class="img-thumb"><div style="width:100%;height:100%;background:linear-gradient(135deg,#1e2230,#2a2f3d);display:flex;align-items:center;justify-content:center;font-size:22px">🚗</div><div class="img-label">Extérieur avant</div></div>
-              <div class="img-thumb"><div style="width:100%;height:100%;background:linear-gradient(135deg,#172035,#243050);display:flex;align-items:center;justify-content:center;font-size:22px">🚙</div><div class="img-label">Arrière</div></div>
-              <div class="img-thumb"><div style="width:100%;height:100%;background:linear-gradient(135deg,#1e2230,#2a2f3d);display:flex;align-items:center;justify-content:center;font-size:22px">🪑</div><div class="img-label">Intérieur</div></div>
-              <div class="img-add" title="Ajouter (max 5)">＋</div>
+            <div class="image-preview" id="img-preview-grid">
+              <div class="img-add" id="img-add-btn" onclick="document.getElementById('file-input').click()" title="Ajouter une image (max 5)">＋</div>
             </div>
-            <div style="margin-top:9px"><input type="text" class="form-input" placeholder="Ou coller un lien Google Drive / URL directe..."></div>
+            <input type="file" id="file-input" accept="image/*" multiple style="display:none" onchange="handleFileUpload(this)">
+            <div id="img-drop-zone" onclick="document.getElementById('file-input').click()" style="margin-top:9px;border:2px dashed var(--border);border-radius:8px;padding:16px;text-align:center;cursor:pointer;transition:all .2s;color:var(--muted);font-size:13px">
+              📁 Cliquer pour choisir des photos ou glisser-déposer ici
+              <div style="font-size:11px;margin-top:4px">JPG, PNG — max 5 images</div>
+            </div>
+            <div style="margin-top:6px;font-size:11px;color:var(--muted)">Astuce : sélectionnez plusieurs photos en maintenant Ctrl (ou Cmd sur Mac)</div>
           </div>
         </div>
       </div>
@@ -475,28 +500,21 @@ Contact : +41 21 612 34 56 · Lausanne
     <div style="background:rgba(34,197,94,.08);border:1px solid rgba(34,197,94,.2);border-radius:10px;padding:14px;margin-bottom:22px;display:flex;align-items:center;gap:12px">
       <div style="font-size:22px">✅</div>
       <div><div style="font-weight:600;font-size:14px;color:var(--success)">Publication planifiée avec succès</div>
-      <div style="font-size:13px;color:var(--muted)">BMW 320d — 32 900.- CHF · 25 mars 2026 à 09:00 · 4 garages · FB + IG + LI</div></div>
+      <div style="font-size:13px;color:var(--muted)">Mazda CX-5 — 35 900.- CHF · 25 mars 2026 à 09:00 · 4 garages · FB + IG + LI</div></div>
     </div>
     <div style="margin-bottom:14px;font-family:'Syne',sans-serif;font-weight:700;font-size:15px">Aperçu du post sur chaque plateforme</div>
     <div class="preview-card">
       <div class="preview-platform"><div style="background:rgba(24,119,242,.2);color:#4f9cf9;font-weight:700;width:26px;height:26px;border-radius:6px;display:flex;align-items:center;justify-content:center">f</div> Facebook — Page "Garage du Lac Sàrl"</div>
       <div style="display:flex;align-items:center;gap:9px;margin-bottom:10px"><div style="width:34px;height:34px;background:var(--accent);border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:13px">GDL</div><div><div style="font-size:13px;font-weight:600">Garage du Lac Sàrl</div><div style="font-size:11px;color:var(--muted)">Page · 25 mars 2026 à 09:00 · 🇫🇷</div></div></div>
-      <div class="preview-text">🚗 Superbe opportunité ! BMW 320d xDrive, 2022, 38 000 km<br>✅ Prix : 32 900.- CHF · Lausanne<br>#bmw #occasion #lausanne #dealerflow</div>
-      <div class="preview-img-row"><div class="preview-img">🚗</div><div class="preview-img">🚙</div><div class="preview-img">🪑</div></div>
-      <div style="font-size:11px;color:var(--muted)">⊞ Carrousel · 3 images · 🇫🇷 Français</div>
-      <div class="preview-stats-row"><div class="preview-stat">❤️ 0 likes</div><div class="preview-stat">💬 0 commentaires</div><div class="preview-stat">↗ 0 partages</div><div class="preview-stat" style="color:var(--warning)">⏳ Simulation uniquement</div></div>
-    </div>
-    <div class="preview-card">
-      <div class="preview-platform"><div style="background:rgba(225,48,108,.2);color:#f06292;width:26px;height:26px;border-radius:6px;display:flex;align-items:center;justify-content:center;font-size:13px">◉</div> Instagram — @garage.du.lac.lausanne</div>
-      <div style="display:flex;align-items:center;gap:9px;margin-bottom:10px"><div style="width:34px;height:34px;background:linear-gradient(135deg,#f06292,#e1306c);border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:12px;color:#fff">GDL</div><div><div style="font-size:13px;font-weight:600">garage.du.lac.lausanne</div><div style="font-size:11px;color:var(--muted)">25 mars 2026 · 🇫🇷</div></div></div>
-      <div class="preview-img-row"><div class="preview-img" style="width:110px;height:85px">🚗</div><div class="preview-img" style="width:110px;height:85px">🚙</div><div class="preview-img" style="width:110px;height:85px">🪑</div></div>
-      <div class="preview-text">🚗 BMW 320d xDrive, 2022, 38 000 km · 32 900.- CHF · Lausanne<br>#bmw #occasion #lausanne #dealerflow</div>
+      <div class="preview-text">🚗 Superbe opportunité ! Mazda CX-5 2.0 Skyactiv-G, 2023, 24 000 km<br>✅ Prix : 35 900.- CHF · Lausanne<br>#mazda #cx5 #occasion #lausanne #dealerflow</div>
+      <div class="preview-img-row" id="preview-imgs-fb"><div class="preview-img">🚗</div><div class="preview-img">🚙</div><div class="preview-img">🪑</div></div>
+      <div class="preview-text">🚗 Mazda CX-5 2.0 Skyactiv-G, 2023, 24 000 km · 35 900.- CHF · Lausanne<br>#mazda #cx5 #occasion #lausanne #dealerflow</div>
       <div class="preview-stats-row"><div class="preview-stat">❤️ 0 likes</div><div class="preview-stat">💬 0 commentaires</div><div class="preview-stat" style="color:var(--warning)">⏳ Simulation uniquement</div></div>
     </div>
     <div class="preview-card">
       <div class="preview-platform"><div style="background:rgba(10,102,194,.2);color:#5ba4d4;font-weight:700;font-size:10px;width:26px;height:26px;border-radius:6px;display:flex;align-items:center;justify-content:center">in</div> LinkedIn — Page "Garage du Lac Sàrl"</div>
       <div style="display:flex;align-items:center;gap:9px;margin-bottom:10px"><div style="width:34px;height:34px;background:rgba(10,102,194,.3);border-radius:7px;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:10px;color:#5ba4d4">GDL</div><div><div style="font-size:13px;font-weight:600">Garage du Lac Sàrl</div><div style="font-size:11px;color:var(--muted)">Entreprise · 25 mars 2026 · 🇫🇷</div></div></div>
-      <div class="preview-text">Garage du Lac Sàrl est heureux de vous présenter ce véhicule d'occasion.<br>BMW 320d xDrive · 2022 · 38 000 km · 32 900.- CHF · Lausanne</div>
+      <div class="preview-text">Garage du Lac Sàrl est heureux de vous présenter ce véhicule d'occasion.<br>Mazda CX-5 2.0 Skyactiv-G · 2023 · 24 000 km · 35 900.- CHF · Lausanne</div>
       <div class="preview-img-row"><div class="preview-img" style="width:190px;height:105px">🚗</div></div>
       <div class="preview-stats-row"><div class="preview-stat">❤️ 0 réactions</div><div class="preview-stat">💬 0 commentaires</div><div class="preview-stat" style="color:var(--warning)">⏳ Simulation uniquement</div></div>
     </div>
@@ -552,10 +570,10 @@ Contact : +41 21 612 34 56 · Lausanne
       <table>
         <thead><tr><th>Annonce</th><th>Langue</th><th>Format</th><th>Garage</th><th>Plateformes</th><th>Stats</th><th>Date</th><th>Statut</th></tr></thead>
         <tbody>
-          <tr><td><strong>BMW 320d — 32 900.- CHF</strong><br><span style="color:var(--muted);font-size:11px">3 images</span></td><td><span class="lang-badge lang-fr">FR</span></td><td><span class="fmt-badge carousel">⊞ Carrousel</span></td><td>Garage du Lac, Lausanne</td><td><div class="platform-tags"><span class="ptag ptag-fb">FB</span><span class="ptag ptag-ig">IG</span><span class="ptag ptag-li">LI</span></div></td><td><div class="mini-stats"><div class="mini-stat">❤️ <span>84</span></div><div class="mini-stat">👁 <span>1 240</span></div></div></td><td style="font-size:12px">20 mars<br><span style="color:var(--muted)">09:00</span></td><td><span class="status-dot dot-green"></span>Publiée</td></tr>
-          <tr><td><strong>VW Golf GTI — 28 500.- CHF</strong><br><span style="color:var(--muted);font-size:11px">4 images</span></td><td><span class="lang-badge lang-de">DE</span></td><td><span class="fmt-badge carousel">⊞ Carrousel</span></td><td>Zürich Auto Center</td><td><div class="platform-tags"><span class="ptag ptag-fb">FB</span><span class="ptag ptag-ig">IG</span></div></td><td><div class="mini-stats"><div class="mini-stat">❤️ <span>57</span></div><div class="mini-stat">👁 <span>890</span></div></div></td><td style="font-size:12px">20 mars<br><span style="color:var(--muted)">10:00</span></td><td><span class="status-dot dot-green"></span>Publiée</td></tr>
-          <tr><td><strong>Alfa Giulia — 41 000.- CHF</strong><br><span style="color:var(--muted);font-size:11px">2 images</span></td><td><span class="lang-badge lang-it">IT</span></td><td><span class="fmt-badge photo">▣ Photo</span></td><td>Lugano Cars Sàrl</td><td><div class="platform-tags"><span class="ptag ptag-fb">FB</span><span class="ptag ptag-li">LI</span></div></td><td><div class="mini-stats" style="color:var(--muted);font-size:12px">—</div></td><td style="font-size:12px">21 mars<br><span style="color:var(--muted)">09:00</span></td><td><span class="status-dot dot-yellow"></span>Planifiée</td></tr>
-          <tr><td><strong>Porsche 911 — 98 000.- CHF</strong><br><span style="color:var(--muted);font-size:11px">5 images</span></td><td><span class="lang-badge lang-fr">FR</span></td><td><span class="fmt-badge carousel">⊞ Carrousel</span></td><td>AutoLéman, Genève</td><td><div class="platform-tags"><span class="ptag ptag-fb">FB</span><span class="ptag ptag-ig">IG</span><span class="ptag ptag-li">LI</span></div></td><td><div class="mini-stats" style="color:var(--danger);font-size:11px">Token expiré</div></td><td style="font-size:12px">19 mars<br><span style="color:var(--muted)">14:00</span></td><td><span class="status-dot dot-red"></span>Erreur</td></tr>
+          <tr><td><strong>Mazda CX-5 — 35 900.- CHF</strong><br><span style="color:var(--muted);font-size:11px">3 images</span></td><td><span class="lang-badge lang-fr">FR</span></td><td><span class="fmt-badge carousel">⊞ Carrousel</span></td><td>Garage du Lac, Lausanne</td><td><div class="platform-tags"><span class="ptag ptag-fb">FB</span><span class="ptag ptag-ig">IG</span><span class="ptag ptag-li">LI</span></div></td><td><div class="mini-stats"><div class="mini-stat">❤️ <span>84</span></div><div class="mini-stat">👁 <span>1 240</span></div></div></td><td style="font-size:12px">20 mars<br><span style="color:var(--muted)">09:00</span></td><td><span class="status-dot dot-green"></span>Publiée</td></tr>
+          <tr><td><strong>Mazda3 Hatchback — 27 900.- CHF</strong><br><span style="color:var(--muted);font-size:11px">4 images</span></td><td><span class="lang-badge lang-de">DE</span></td><td><span class="fmt-badge carousel">⊞ Carrousel</span></td><td>Zürich Auto Center</td><td><div class="platform-tags"><span class="ptag ptag-fb">FB</span><span class="ptag ptag-ig">IG</span></div></td><td><div class="mini-stats"><div class="mini-stat">❤️ <span>57</span></div><div class="mini-stat">👁 <span>890</span></div></div></td><td style="font-size:12px">20 mars<br><span style="color:var(--muted)">10:00</span></td><td><span class="status-dot dot-green"></span>Publiée</td></tr>
+          <tr><td><strong>Mazda MX-5 — 32 400.- CHF</strong><br><span style="color:var(--muted);font-size:11px">2 images</span></td><td><span class="lang-badge lang-it">IT</span></td><td><span class="fmt-badge photo">▣ Photo</span></td><td>Lugano Cars Sàrl</td><td><div class="platform-tags"><span class="ptag ptag-fb">FB</span><span class="ptag ptag-li">LI</span></div></td><td><div class="mini-stats" style="color:var(--muted);font-size:12px">—</div></td><td style="font-size:12px">21 mars<br><span style="color:var(--muted)">09:00</span></td><td><span class="status-dot dot-yellow"></span>Planifiée</td></tr>
+          <tr><td><strong>Mazda CX-60 PHEV — 52 900.- CHF</strong><br><span style="color:var(--muted);font-size:11px">5 images</span></td><td><span class="lang-badge lang-fr">FR</span></td><td><span class="fmt-badge carousel">⊞ Carrousel</span></td><td>AutoLéman, Genève</td><td><div class="platform-tags"><span class="ptag ptag-fb">FB</span><span class="ptag ptag-ig">IG</span><span class="ptag ptag-li">LI</span></div></td><td><div class="mini-stats" style="color:var(--danger);font-size:11px">Token expiré</div></td><td style="font-size:12px">19 mars<br><span style="color:var(--muted)">14:00</span></td><td><span class="status-dot dot-red"></span>Erreur</td></tr>
         </tbody>
       </table>
     </div>
@@ -574,10 +592,10 @@ Contact : +41 21 612 34 56 · Lausanne
       <table>
         <thead><tr><th>Annonce</th><th>Langue</th><th>Format</th><th>Diffusion</th><th>Stats</th><th>Publication</th><th>Statut</th></tr></thead>
         <tbody>
-          <tr><td><strong>BMW 320d — 32 900.- CHF</strong></td><td><span class="lang-badge lang-fr">FR</span></td><td><span class="fmt-badge carousel">⊞ Carrousel</span></td><td><span class="tag">4 garages</span></td><td><div class="mini-stats"><div class="mini-stat">❤️ <span>84</span></div><div class="mini-stat">👁 <span>1 240</span></div></div></td><td style="font-size:12px">20 mars · 09:00</td><td><span class="status-dot dot-green"></span>Publiée</td></tr>
-          <tr><td><strong>VW Golf GTI — 28 500.- CHF</strong></td><td><span class="lang-badge lang-de">DE</span></td><td><span class="fmt-badge carousel">⊞ Carrousel</span></td><td><span class="tag">2 garages DE</span></td><td><div class="mini-stats"><div class="mini-stat">❤️ <span>57</span></div><div class="mini-stat">👁 <span>890</span></div></div></td><td style="font-size:12px">20 mars · 10:00</td><td><span class="status-dot dot-green"></span>Publiée</td></tr>
-          <tr><td><strong>Alfa Giulia — 41 000.- CHF</strong></td><td><span class="lang-badge lang-it">IT</span></td><td><span class="fmt-badge photo">▣ Photo</span></td><td><span class="tag">3 garages IT</span></td><td><span style="color:var(--muted)">—</span></td><td style="font-size:12px">21 mars · 09:00</td><td><span class="status-dot dot-yellow"></span>Planifiée</td></tr>
-          <tr><td><strong>Mercedes C220 — 38 800.- CHF</strong></td><td><span class="lang-badge lang-fr">FR</span></td><td><span class="fmt-badge carousel">⊞ Carrousel</span></td><td><span class="tag">9 garages</span></td><td><span style="color:var(--muted)">—</span></td><td style="font-size:12px">22 mars · 09:00</td><td><span class="status-dot dot-yellow"></span>Planifiée</td></tr>
+          <tr><td><strong>Mazda CX-5 — 35 900.- CHF</strong></td><td><span class="lang-badge lang-fr">FR</span></td><td><span class="fmt-badge carousel">⊞ Carrousel</span></td><td><span class="tag">4 garages</span></td><td><div class="mini-stats"><div class="mini-stat">❤️ <span>84</span></div><div class="mini-stat">👁 <span>1 240</span></div></div></td><td style="font-size:12px">20 mars · 09:00</td><td><span class="status-dot dot-green"></span>Publiée</td></tr>
+          <tr><td><strong>Mazda3 Hatchback — 27 900.- CHF</strong></td><td><span class="lang-badge lang-de">DE</span></td><td><span class="fmt-badge carousel">⊞ Carrousel</span></td><td><span class="tag">2 garages DE</span></td><td><div class="mini-stats"><div class="mini-stat">❤️ <span>57</span></div><div class="mini-stat">👁 <span>890</span></div></div></td><td style="font-size:12px">20 mars · 10:00</td><td><span class="status-dot dot-green"></span>Publiée</td></tr>
+          <tr><td><strong>Mazda MX-5 — 32 400.- CHF</strong></td><td><span class="lang-badge lang-it">IT</span></td><td><span class="fmt-badge photo">▣ Photo</span></td><td><span class="tag">3 garages IT</span></td><td><span style="color:var(--muted)">—</span></td><td style="font-size:12px">21 mars · 09:00</td><td><span class="status-dot dot-yellow"></span>Planifiée</td></tr>
+          <tr><td><strong>Mazda CX-80 — 59 900.- CHF</strong></td><td><span class="lang-badge lang-fr">FR</span></td><td><span class="fmt-badge carousel">⊞ Carrousel</span></td><td><span class="tag">9 garages</span></td><td><span style="color:var(--muted)">—</span></td><td style="font-size:12px">22 mars · 09:00</td><td><span class="status-dot dot-yellow"></span>Planifiée</td></tr>
         </tbody>
       </table>
     </div>
@@ -616,10 +634,10 @@ Contact : +41 21 612 34 56 · Lausanne
       <table>
         <thead><tr><th>Annonce</th><th>Langue</th><th>Format</th><th>Likes</th><th>Impressions</th><th>Clics</th></tr></thead>
         <tbody>
-          <tr><td><strong>Porsche 911 — 98 000.- CHF</strong></td><td><span class="lang-badge lang-fr">FR</span></td><td><span class="fmt-badge carousel">⊞ Carrousel</span></td><td>312</td><td>4 800</td><td>230</td></tr>
-          <tr><td><strong>BMW 320d — 32 900.- CHF</strong></td><td><span class="lang-badge lang-fr">FR</span></td><td><span class="fmt-badge carousel">⊞ Carrousel</span></td><td>221</td><td>3 600</td><td>156</td></tr>
-          <tr><td><strong>VW Golf GTI — 28 500.- CHF</strong></td><td><span class="lang-badge lang-de">DE</span></td><td><span class="fmt-badge carousel">⊞ Carrousel</span></td><td>198</td><td>2 900</td><td>120</td></tr>
-          <tr><td><strong>Alfa Giulia — 41 000.- CHF</strong></td><td><span class="lang-badge lang-it">IT</span></td><td><span class="fmt-badge photo">▣ Photo</span></td><td>164</td><td>2 600</td><td>108</td></tr>
+          <tr><td><strong>Mazda CX-60 PHEV — 52 900.- CHF</strong></td><td><span class="lang-badge lang-fr">FR</span></td><td><span class="fmt-badge carousel">⊞ Carrousel</span></td><td>312</td><td>4 800</td><td>230</td></tr>
+          <tr><td><strong>Mazda CX-5 — 35 900.- CHF</strong></td><td><span class="lang-badge lang-fr">FR</span></td><td><span class="fmt-badge carousel">⊞ Carrousel</span></td><td>221</td><td>3 600</td><td>156</td></tr>
+          <tr><td><strong>Mazda3 Hatchback — 27 900.- CHF</strong></td><td><span class="lang-badge lang-de">DE</span></td><td><span class="fmt-badge carousel">⊞ Carrousel</span></td><td>198</td><td>2 900</td><td>120</td></tr>
+          <tr><td><strong>Mazda MX-5 — 32 400.- CHF</strong></td><td><span class="lang-badge lang-it">IT</span></td><td><span class="fmt-badge photo">▣ Photo</span></td><td>164</td><td>2 600</td><td>108</td></tr>
         </tbody>
       </table>
     </div>
@@ -735,6 +753,87 @@ Contact : +41 21 612 34 56 · Lausanne
 <script>
 function showScreen(name,navEl){document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));document.querySelectorAll('.nav-item').forEach(n=>n.classList.remove('active'));document.getElementById('screen-'+name).classList.add('active');if(navEl)navEl.classList.add('active')}
 function goBack(){var navGarages=document.getElementById('nav-garages');showScreen('garages',navGarages)}
+var imgUrls=[];
+function handleFileUpload(input){
+  var files=Array.from(input.files);
+  files.forEach(function(file){
+    if(imgUrls.length>=5)return;
+    var reader=new FileReader();
+    reader.onload=function(e){
+      imgUrls.push(e.target.result);
+      addImageThumb(e.target.result, imgUrls.length);
+      updatePreviewImages();
+    };
+    reader.readAsDataURL(file);
+  });
+  input.value='';
+}
+function addImageThumb(src, idx){
+  var grid=document.getElementById('img-preview-grid');
+  var addBtn=document.getElementById('img-add-btn');
+  var thumb=document.createElement('div');
+  thumb.className='img-thumb';
+  var img=document.createElement('img');
+  img.src=src;
+  img.style.cssText='width:100%;height:100%;object-fit:cover';
+  var lbl=document.createElement('div');
+  lbl.className='img-label';
+  lbl.textContent='Image '+idx;
+  thumb.appendChild(img);
+  thumb.appendChild(lbl);
+  grid.insertBefore(thumb,addBtn);
+  if(imgUrls.length>=5)addBtn.style.display='none';
+}
+// Drag & drop
+document.addEventListener('DOMContentLoaded',function(){
+  var dz=document.getElementById('img-drop-zone');
+  if(!dz)return;
+  dz.addEventListener('dragover',function(e){e.preventDefault();dz.style.borderColor='var(--accent)';dz.style.background='rgba(37,99,235,.06)'});
+  dz.addEventListener('dragleave',function(){dz.style.borderColor='var(--border)';dz.style.background='transparent'});
+  dz.addEventListener('drop',function(e){
+    e.preventDefault();
+    dz.style.borderColor='var(--border)';dz.style.background='transparent';
+    var files=Array.from(e.dataTransfer.files).filter(f=>f.type.startsWith('image/'));
+    files.forEach(function(file){
+      if(imgUrls.length>=5)return;
+      var reader=new FileReader();
+      reader.onload=function(ev){
+        imgUrls.push(ev.target.result);
+        addImageThumb(ev.target.result,imgUrls.length);
+        updatePreviewImages();
+      };
+      reader.readAsDataURL(file);
+    });
+  });
+});
+function updatePreviewImages(){
+  var rows=['preview-imgs-fb','preview-imgs-ig'];
+  rows.forEach(function(rowId){
+    var row=document.getElementById(rowId);
+    if(!row)return;
+    if(imgUrls.length===0)return;
+    row.innerHTML='';
+    imgUrls.forEach(function(src){
+      var d=document.createElement('div');
+      d.className='preview-img';
+      if(rowId==='preview-imgs-ig'){d.style.width='110px';d.style.height='85px';}
+      var img=document.createElement('img');
+      img.src=src;
+      img.style.cssText='width:100%;height:100%;object-fit:cover;border-radius:6px';
+      d.appendChild(img);
+      row.appendChild(d);
+    });
+  });
+}
+function selectPack(pack){
+  var cards={base:document.getElementById('pack-base'),inter:document.getElementById('pack-inter'),pro:document.getElementById('pack-pro')};
+  var labels={base:'Base — 150.- CHF/mois · 1 post/semaine',inter:'Intermédiaire — 200.- CHF/mois · 2 posts/semaine',pro:'Pro — 250.- CHF/mois · 3 posts/semaine'};
+  Object.keys(cards).forEach(function(k){
+    if(k===pack){cards[k].style.border='2px solid var(--accent)';cards[k].style.background='rgba(37,99,235,.1)';}
+    else{cards[k].style.border='1px solid var(--border)';cards[k].style.background='var(--surface2)';}
+  });
+  document.getElementById('pack-label').textContent=labels[pack];
+}
 function openGarageDashboard(name,location,statusClass,statusText){
   document.getElementById('gd-title').textContent=name;
   document.getElementById('gd-location').textContent=location;
@@ -754,7 +853,7 @@ function updateCount(){setTimeout(()=>{document.getElementById('selectedCount').
 function goToOAuth(){const name=document.getElementById('garage-name-input').value||'Garage du Lac Sàrl';const city=document.getElementById('garage-city-input').value||'Lausanne';const lang=document.getElementById('garage-lang-input');const langText=lang?lang.options[lang.selectedIndex].text:'🇫🇷 Français';document.getElementById('oauth-garage-name').textContent=name;document.getElementById('oauth-garage-city').textContent=city+' · '+langText;showScreen('oauth',document.querySelectorAll('.nav-item')[1])}
 let connected={fb:true,ig:false,li:false};
 function connectPlatform(p){connected[p]=true;document.getElementById('cp-'+p).classList.add('connected');document.getElementById(p+'-status').style.color='var(--success)';document.getElementById(p+'-status').textContent='✓ Connecté';const btn=document.getElementById('btn-'+p);if(btn){btn.className='connect-btn-sm connect-btn-done';btn.textContent='Connecté';btn.onclick=null}const total=Object.values(connected).filter(Boolean).length;const pct=Math.round(total/3*100);document.getElementById('oauth-progress').style.width=pct+'%';document.getElementById('oauth-progress-label').textContent=total+' / 3 connectées';document.getElementById('oauth-progress-pct').textContent=pct+'%';if(total===3)document.getElementById('oauth-next-btn').style.display='block'}
-function downloadReport(){const langSel=document.getElementById('post-lang');const lang=langSel?langSel.value:'fr';const langNames={fr:'🇫🇷 Français',de:'🇩🇪 Deutsch',it:'🇮🇹 Italiano'};const textFbIg=document.getElementById('text-fb-ig')?document.getElementById('text-fb-ig').value:'';const textLi=document.getElementById('text-li')?document.getElementById('text-li').value:'';const now=new Date().toLocaleDateString('fr-CH',{day:'2-digit',month:'long',year:'numeric'});const esc=s=>s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/\n/g,'<br>');const html='<!DOCTYPE html><html lang="fr"><head><meta charset="UTF-8"><title>DealerFlow — Rapport simulation</title><style>body{font-family:Arial,sans-serif;max-width:760px;margin:40px auto;color:#111;line-height:1.6;padding:0 20px}.hdr{border-bottom:4px solid #2563eb;padding-bottom:18px;margin-bottom:26px;display:flex;justify-content:space-between;align-items:flex-end}.logo{font-size:26px;font-weight:900;color:#1e3a8a}.logo span{color:#2563eb}.warn{background:#fffbeb;border:1px solid #fde68a;border-radius:6px;padding:11px 15px;font-size:13px;color:#92400e;margin:10px 0}.info-tbl{width:100%;border-collapse:collapse;margin-bottom:18px}.info-tbl td{padding:8px 11px;border:1px solid #e5e7eb;font-size:13px}.info-tbl td:first-child{background:#f0f7ff;font-weight:600;width:35%}.pb{background:#f9fafb;border:1px solid #e5e7eb;border-radius:8px;padding:18px;margin-bottom:18px}.pt{font-size:14px;font-weight:700;margin-bottom:10px;padding-bottom:8px;border-bottom:1px solid #e5e7eb}.ptext{background:#fff;border:1px solid #e5e7eb;border-radius:5px;padding:12px;font-size:13px;margin:8px 0;white-space:pre-wrap}.imgs{display:flex;gap:7px;margin:9px 0}.img{width:80px;height:60px;background:#dbeafe;border-radius:5px;display:flex;align-items:center;justify-content:center;font-size:22px}.ftr{margin-top:36px;padding-top:14px;border-top:1px solid #e5e7eb;font-size:11px;color:#6b7280;display:flex;justify-content:space-between}h2{font-size:15px;color:#1e3a8a;border-left:4px solid #2563eb;padding-left:9px;margin:24px 0 12px}@media print{body{margin:0;padding:15px}}</style></head><body><div class="hdr"><div><div class="logo">Dealer<span>flow</span></div><div style="font-size:12px;color:#6b7280">Plateforme de publication automobile · Suisse</div></div><div style="text-align:right"><div style="font-weight:600;font-size:13px">Rapport de simulation</div><div style="font-size:12px;color:#6b7280">Généré le '+now+'</div></div></div><div class="warn">⚠ SIMULATION — Ce rapport présente ce qui sera publié. <strong>Aucune publication réelle n&apos;a été effectuée.</strong></div><h2>Informations de l&apos;annonce</h2><table class="info-tbl"><tr><td>Véhicule</td><td>BMW 320d xDrive, 2022, 38 000 km</td></tr><tr><td>Prix</td><td>32 900.- CHF</td></tr><tr><td>Garage</td><td>Garage du Lac Sàrl — Lausanne</td></tr><tr><td>Langue</td><td>'+langNames[lang]+'</td></tr><tr><td>Date planifiée</td><td>25 mars 2026 à 09:00</td></tr><tr><td>Format</td><td>Carrousel — 3 images</td></tr><tr><td>Plateformes</td><td>Facebook · Instagram · LinkedIn</td></tr><tr><td>Garages destinataires</td><td>4 garages sélectionnés</td></tr></table><h2>Facebook</h2><div class="pb"><div class="pt">f Facebook · Page &quot;Garage du Lac Sàrl&quot; · 25 mars 2026 09:00</div><div class="ptext">'+esc(textFbIg)+'</div><div class="imgs"><div class="img">🚗</div><div class="img">🚙</div><div class="img">🪑</div></div><div class="warn">⏳ Simulation — Ce post ne sera PAS envoyé sur Facebook.</div></div><h2>Instagram</h2><div class="pb"><div class="pt">◉ Instagram · @garage.du.lac.lausanne · Carrousel</div><div class="ptext">'+esc(textFbIg)+'</div><div class="imgs"><div class="img">🚗</div><div class="img">🚙</div><div class="img">🪑</div></div><div class="warn">⏳ Simulation — Ce post ne sera PAS envoyé sur Instagram.</div></div><h2>LinkedIn</h2><div class="pb"><div class="pt">in LinkedIn · Page &quot;Garage du Lac Sàrl&quot;</div><div class="ptext">'+esc(textLi)+'</div><div class="imgs"><div class="img" style="width:180px;height:100px">🚗</div></div><div class="warn">⏳ Simulation — Ce post ne sera PAS envoyé sur LinkedIn.</div></div><div class="ftr"><span>DealerFlow · dealerflow.ch</span><span>Rapport de simulation · Non contractuel · '+now+'</span></div><script>window.onload=function(){window.print()}<\/script></body></html>';const blob=new Blob([html],{type:'text/html'});const url=URL.createObjectURL(blob);const a=document.createElement('a');a.href=url;a.download='DealerFlow_Rapport_Simulation.html';a.click();setTimeout(()=>URL.revokeObjectURL(url),1000)}
+function downloadReport(){const langSel=document.getElementById('post-lang');const lang=langSel?langSel.value:'fr';const langNames={fr:'🇫🇷 Français',de:'🇩🇪 Deutsch',it:'🇮🇹 Italiano'};const textFbIg=document.getElementById('text-fb-ig')?document.getElementById('text-fb-ig').value:'';const textLi=document.getElementById('text-li')?document.getElementById('text-li').value:'';const now=new Date().toLocaleDateString('fr-CH',{day:'2-digit',month:'long',year:'numeric'});const esc=s=>s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/\n/g,'<br>');const html='<!DOCTYPE html><html lang="fr"><head><meta charset="UTF-8"><title>DealerFlow — Rapport simulation</title><style>body{font-family:Arial,sans-serif;max-width:760px;margin:40px auto;color:#111;line-height:1.6;padding:0 20px}.hdr{border-bottom:4px solid #2563eb;padding-bottom:18px;margin-bottom:26px;display:flex;justify-content:space-between;align-items:flex-end}.logo{font-size:26px;font-weight:900;color:#1e3a8a}.logo span{color:#2563eb}.warn{background:#fffbeb;border:1px solid #fde68a;border-radius:6px;padding:11px 15px;font-size:13px;color:#92400e;margin:10px 0}.info-tbl{width:100%;border-collapse:collapse;margin-bottom:18px}.info-tbl td{padding:8px 11px;border:1px solid #e5e7eb;font-size:13px}.info-tbl td:first-child{background:#f0f7ff;font-weight:600;width:35%}.pb{background:#f9fafb;border:1px solid #e5e7eb;border-radius:8px;padding:18px;margin-bottom:18px}.pt{font-size:14px;font-weight:700;margin-bottom:10px;padding-bottom:8px;border-bottom:1px solid #e5e7eb}.ptext{background:#fff;border:1px solid #e5e7eb;border-radius:5px;padding:12px;font-size:13px;margin:8px 0;white-space:pre-wrap}.imgs{display:flex;gap:7px;margin:9px 0}.img{width:80px;height:60px;background:#dbeafe;border-radius:5px;display:flex;align-items:center;justify-content:center;font-size:22px}.ftr{margin-top:36px;padding-top:14px;border-top:1px solid #e5e7eb;font-size:11px;color:#6b7280;display:flex;justify-content:space-between}h2{font-size:15px;color:#1e3a8a;border-left:4px solid #2563eb;padding-left:9px;margin:24px 0 12px}@media print{body{margin:0;padding:15px}}</style></head><body><div class="hdr"><div><div class="logo">Dealer<span>flow</span></div><div style="font-size:12px;color:#6b7280">Plateforme de publication automobile · Suisse</div></div><div style="text-align:right"><div style="font-weight:600;font-size:13px">Rapport de simulation</div><div style="font-size:12px;color:#6b7280">Généré le '+now+'</div></div></div><div class="warn">⚠ SIMULATION — Ce rapport présente ce qui sera publié. <strong>Aucune publication réelle n&apos;a été effectuée.</strong></div><h2>Informations de l&apos;annonce</h2><table class="info-tbl"><tr><td>Véhicule</td><td>Mazda CX-5 2.0 Skyactiv-G, 2023, 24 000 km</td></tr><tr><td>Prix</td><td>35 900.- CHF</td></tr><tr><td>Garage</td><td>Garage du Lac Sàrl — Lausanne</td></tr><tr><td>Langue</td><td>'+langNames[lang]+'</td></tr><tr><td>Date planifiée</td><td>25 mars 2026 à 09:00</td></tr><tr><td>Format</td><td>Carrousel — 3 images</td></tr><tr><td>Plateformes</td><td>Facebook · Instagram · LinkedIn</td></tr><tr><td>Garages destinataires</td><td>4 garages sélectionnés</td></tr></table><h2>Facebook</h2><div class="pb"><div class="pt">f Facebook · Page &quot;Garage du Lac Sàrl&quot; · 25 mars 2026 09:00</div><div class="ptext">'+esc(textFbIg)+'</div><div class="imgs"><div class="img">🚗</div><div class="img">🚙</div><div class="img">🪑</div></div><div class="warn">⏳ Simulation — Ce post ne sera PAS envoyé sur Facebook.</div></div><h2>Instagram</h2><div class="pb"><div class="pt">◉ Instagram · @garage.du.lac.lausanne · Carrousel</div><div class="ptext">'+esc(textFbIg)+'</div><div class="imgs"><div class="img">🚗</div><div class="img">🚙</div><div class="img">🪑</div></div><div class="warn">⏳ Simulation — Ce post ne sera PAS envoyé sur Instagram.</div></div><h2>LinkedIn</h2><div class="pb"><div class="pt">in LinkedIn · Page &quot;Garage du Lac Sàrl&quot;</div><div class="ptext">'+esc(textLi)+'</div><div class="imgs"><div class="img" style="width:180px;height:100px">🚗</div></div><div class="warn">⏳ Simulation — Ce post ne sera PAS envoyé sur LinkedIn.</div></div><div class="ftr"><span>DealerFlow · dealerflow.ch</span><span>Rapport de simulation · Non contractuel · '+now+'</span></div><script>window.onload=function(){window.print()}<\/script></body></html>';const blob=new Blob([html],{type:'text/html'});const url=URL.createObjectURL(blob);const a=document.createElement('a');a.href=url;a.download='DealerFlow_Rapport_Simulation.html';a.click();setTimeout(()=>URL.revokeObjectURL(url),1000)}
 </script>
 </body>
 </html>
