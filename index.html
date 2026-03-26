@@ -749,6 +749,7 @@ tr:hover td{background:rgba(255,255,255,.015)}
 </main>
 </div>
 <script>
+
 function showScreen(name,navEl){document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));document.querySelectorAll('.nav-item').forEach(n=>n.classList.remove('active'));document.getElementById('screen-'+name).classList.add('active');if(navEl)navEl.classList.add('active')}
 function goBack(){var navGarages=document.getElementById('nav-garages');showScreen('garages',navGarages)}
 var imgUrls=[];
@@ -909,7 +910,92 @@ function updateCount(){setTimeout(()=>{document.getElementById('selectedCount').
 function goToOAuth(){const name=document.getElementById('garage-name-input').value||'Garage du Lac Sàrl';const city=document.getElementById('garage-city-input').value||'Lausanne';const lang=document.getElementById('garage-lang-input');const langText=lang?lang.options[lang.selectedIndex].text:'🇫🇷 Français';document.getElementById('oauth-garage-name').textContent=name;document.getElementById('oauth-garage-city').textContent=city+' · '+langText;showScreen('oauth',document.querySelectorAll('.nav-item')[1])}
 let connected={fb:true,ig:false,li:false};
 function connectPlatform(p){connected[p]=true;document.getElementById('cp-'+p).classList.add('connected');document.getElementById(p+'-status').style.color='var(--success)';document.getElementById(p+'-status').textContent='✓ Connecté';const btn=document.getElementById('btn-'+p);if(btn){btn.className='connect-btn-sm connect-btn-done';btn.textContent='Connecté';btn.onclick=null}const total=Object.values(connected).filter(Boolean).length;const pct=Math.round(total/3*100);document.getElementById('oauth-progress').style.width=pct+'%';document.getElementById('oauth-progress-label').textContent=total+' / 3 connectées';document.getElementById('oauth-progress-pct').textContent=pct+'%';if(total===3)document.getElementById('oauth-next-btn').style.display='block'}
-function downloadReport(){const langSel=document.getElementById('post-lang');const lang=langSel?langSel.value:'fr';const langNames={fr:'🇫🇷 Français',de:'🇩🇪 Deutsch',it:'🇮🇹 Italiano'};const textFbIg=document.getElementById('text-fb-ig')?document.getElementById('text-fb-ig').value:'';const textLi=document.getElementById('text-li')?document.getElementById('text-li').value:'';const now=new Date().toLocaleDateString('fr-CH',{day:'2-digit',month:'long',year:'numeric'});const esc=s=>s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/\n/g,'<br>');const html='<!DOCTYPE html><html lang="fr"><head><meta charset="UTF-8"><title>DealerFlow — Rapport simulation</title><style>body{font-family:Arial,sans-serif;max-width:760px;margin:40px auto;color:#111;line-height:1.6;padding:0 20px}.hdr{border-bottom:4px solid #2563eb;padding-bottom:18px;margin-bottom:26px;display:flex;justify-content:space-between;align-items:flex-end}.logo{font-size:26px;font-weight:900;color:#1e3a8a}.logo span{color:#2563eb}.warn{background:#fffbeb;border:1px solid #fde68a;border-radius:6px;padding:11px 15px;font-size:13px;color:#92400e;margin:10px 0}.info-tbl{width:100%;border-collapse:collapse;margin-bottom:18px}.info-tbl td{padding:8px 11px;border:1px solid #e5e7eb;font-size:13px}.info-tbl td:first-child{background:#f0f7ff;font-weight:600;width:35%}.pb{background:#f9fafb;border:1px solid #e5e7eb;border-radius:8px;padding:18px;margin-bottom:18px}.pt{font-size:14px;font-weight:700;margin-bottom:10px;padding-bottom:8px;border-bottom:1px solid #e5e7eb}.ptext{background:#fff;border:1px solid #e5e7eb;border-radius:5px;padding:12px;font-size:13px;margin:8px 0;white-space:pre-wrap}.imgs{display:flex;gap:7px;margin:9px 0}.img{width:80px;height:60px;background:#dbeafe;border-radius:5px;display:flex;align-items:center;justify-content:center;font-size:22px}.ftr{margin-top:36px;padding-top:14px;border-top:1px solid #e5e7eb;font-size:11px;color:#6b7280;display:flex;justify-content:space-between}h2{font-size:15px;color:#1e3a8a;border-left:4px solid #2563eb;padding-left:9px;margin:24px 0 12px}@media print{body{margin:0;padding:15px}}</style></head><body><div class="hdr"><div><div class="logo">Dealer<span>flow</span></div><div style="font-size:12px;color:#6b7280">Plateforme de publication automobile · Suisse</div></div><div style="text-align:right"><div style="font-weight:600;font-size:13px">Rapport de simulation</div><div style="font-size:12px;color:#6b7280">Généré le '+now+'</div></div></div><div class="warn">⚠ SIMULATION — Ce rapport présente ce qui sera publié. <strong>Aucune publication réelle n&apos;a été effectuée.</strong></div><h2>Informations de l&apos;annonce</h2><table class="info-tbl"><tr><td>Véhicule</td><td>Mazda CX-5 2.0 Skyactiv-G, 2023, 24 000 km</td></tr><tr><td>Prix</td><td>35 900.- CHF</td></tr><tr><td>Garage</td><td>Garage du Lac Sàrl — Lausanne</td></tr><tr><td>Langue</td><td>'+langNames[lang]+'</td></tr><tr><td>Date planifiée</td><td>25 mars 2026 à 09:00</td></tr><tr><td>Format</td><td>Carrousel — 3 images</td></tr><tr><td>Plateformes</td><td>Facebook · Instagram · LinkedIn</td></tr><tr><td>Garages destinataires</td><td>4 garages sélectionnés</td></tr></table><h2>Facebook</h2><div class="pb"><div class="pt">f Facebook · Page &quot;Garage du Lac Sàrl&quot; · 25 mars 2026 09:00</div><div class="ptext">'+esc(textFbIg)+'</div><div class="imgs"><div class="img">🚗</div><div class="img">🚙</div><div class="img">🪑</div></div><div class="warn">⏳ Simulation — Ce post ne sera PAS envoyé sur Facebook.</div></div><h2>Instagram</h2><div class="pb"><div class="pt">◉ Instagram · @garage.du.lac.lausanne · Carrousel</div><div class="ptext">'+esc(textFbIg)+'</div><div class="imgs"><div class="img">🚗</div><div class="img">🚙</div><div class="img">🪑</div></div><div class="warn">⏳ Simulation — Ce post ne sera PAS envoyé sur Instagram.</div></div><h2>LinkedIn</h2><div class="pb"><div class="pt">in LinkedIn · Page &quot;Garage du Lac Sàrl&quot;</div><div class="ptext">'+esc(textLi)+'</div><div class="imgs"><div class="img" style="width:180px;height:100px">🚗</div></div><div class="warn">⏳ Simulation — Ce post ne sera PAS envoyé sur LinkedIn.</div></div><div class="ftr"><span>DealerFlow · dealerflow.ch</span><span>Rapport de simulation · Non contractuel · '+now+'</span></div><script>window.onload=function(){window.print()}<\/script></body></html>';const blob=new Blob([html],{type:'text/html'});const url=URL.createObjectURL(blob);const a=document.createElement('a');a.href=url;a.download='DealerFlow_Rapport_Simulation.html';a.click();setTimeout(()=>URL.revokeObjectURL(url),1000)}
+function downloadReport(){
+  var titre=document.getElementById('annonce-titre').value.trim()||'Annonce sans titre';
+  var prix=document.getElementById('annonce-prix').value.trim()||'';
+  var textFbIg=document.getElementById('text-fb-ig').value.trim()||'(aucun texte saisi)';
+  var textLi=document.getElementById('text-li').value.trim()||textFbIg;
+  var dateInput=document.querySelector('#screen-nouvelle input[type="date"]');
+  var heureInput=document.querySelector('#screen-nouvelle input[type="time"]');
+  var date=dateInput&&dateInput.value?dateInput.value.split('-').reverse().join('/'):'25/03/2026';
+  var heure=heureInput&&heureInput.value?heureInput.value:'09:00';
+  var langSel=document.getElementById('post-lang');
+  var langText=langSel?langSel.options[langSel.selectedIndex].text:'Francais';
+  var selectedGarages=document.querySelectorAll('.garage-chip.selected');
+  var nbGarages=selectedGarages.length;
+  var firstGarage=nbGarages>0?selectedGarages[0].textContent.replace('checkmark','').trim():'(aucun garage)';
+  var fmt=imgUrls.length>1?'Carrousel - '+imgUrls.length+' images':'Photo unique';
+  var now=new Date().toLocaleDateString('fr-CH',{day:'2-digit',month:'long',year:'numeric'});
+  var esc=function(s){return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');};
+  var nl2br=function(s){return esc(s).replace(/\n/g,'<br>');};
+  var imgsHtml='';
+  if(imgUrls.length>0){
+    imgUrls.forEach(function(src){
+      imgsHtml+='<img src="'+src+'" style="width:120px;height:85px;object-fit:cover;border-radius:5px;margin-right:6px">';
+    });
+  } else {
+    imgsHtml='<div style="padding:12px;background:#f0f7ff;border-radius:5px;font-size:12px;color:#6b7280">Aucune image ajoutee</div>';
+  }
+  var liImgHtml=imgUrls.length>0?'<img src="'+imgUrls[0]+'" style="width:300px;height:170px;object-fit:cover;border-radius:5px">':imgsHtml;
+  var html='<!DOCTYPE html><html lang="fr"><head><meta charset="UTF-8"><title>DealerFlow Rapport</title>'
+  +'<style>body{font-family:Arial,sans-serif;max-width:760px;margin:40px auto;color:#111;line-height:1.6;padding:0 20px}'
+  +'.hdr{border-bottom:4px solid #2563eb;padding-bottom:18px;margin-bottom:26px;display:flex;justify-content:space-between}'
+  +'.logo{font-size:26px;font-weight:900;color:#1e3a8a}.logo span{color:#2563eb}'
+  +'.warn-red{background:#fef2f2;border:1px solid #fecaca;border-radius:6px;padding:11px 15px;font-size:13px;color:#dc2626;margin:10px 0;font-weight:600}'
+  +'.warn{background:#fffbeb;border:1px solid #fde68a;border-radius:6px;padding:11px 15px;font-size:13px;color:#92400e;margin:10px 0}'
+  +'.info-tbl{width:100%;border-collapse:collapse;margin-bottom:18px}'
+  +'.info-tbl td{padding:8px 11px;border:1px solid #e5e7eb;font-size:13px}'
+  +'.info-tbl td:first-child{background:#f0f7ff;font-weight:600;width:35%}'
+  +'.pb{background:#f9fafb;border:1px solid #e5e7eb;border-radius:8px;padding:18px;margin-bottom:18px}'
+  +'.pt{font-size:14px;font-weight:700;margin-bottom:10px;padding-bottom:8px;border-bottom:1px solid #e5e7eb}'
+  +'.ptext{background:#fff;border:1px solid #e5e7eb;border-radius:5px;padding:12px;font-size:13px;margin:8px 0;line-height:1.7}'
+  +'.imgs{display:flex;flex-wrap:wrap;gap:6px;margin:9px 0}'
+  +'.ftr{margin-top:36px;padding-top:14px;border-top:1px solid #e5e7eb;font-size:11px;color:#6b7280;display:flex;justify-content:space-between}'
+  +'h2{font-size:15px;color:#1e3a8a;border-left:4px solid #2563eb;padding-left:9px;margin:24px 0 12px}'
+  +'@media print{body{margin:0;padding:15px}}</style></head><body>'
+  +'<div class="hdr"><div><div class="logo">Dealer<span>flow</span></div>'
+  +'<div style="font-size:12px;color:#6b7280">Plateforme de publication automobile - Suisse</div></div>'
+  +'<div style="text-align:right"><div style="font-weight:600;font-size:13px">Rapport de simulation</div>'
+  +'<div style="font-size:12px;color:#6b7280">Genere le '+now+'</div></div></div>'
+  +'<div class="warn-red">SIMULATION - Aucune publication reelle. Usage interne uniquement.</div>'
+  +'<h2>Informations annonce</h2>'
+  +'<table class="info-tbl">'
+  +'<tr><td>Titre</td><td>'+esc(titre)+'</td></tr>'
+  +'<tr><td>Prix</td><td>'+esc(prix)+' CHF</td></tr>'
+  +'<tr><td>Garage principal</td><td>'+esc(firstGarage)+'</td></tr>'
+  +'<tr><td>Langue</td><td>'+esc(langText)+'</td></tr>'
+  +'<tr><td>Date planifiee</td><td>'+date+' a '+heure+'</td></tr>'
+  +'<tr><td>Format</td><td>'+fmt+'</td></tr>'
+  +'<tr><td>Plateformes</td><td>Facebook - Instagram - LinkedIn</td></tr>'
+  +'<tr><td>Garages</td><td>'+nbGarages+' garage(s) selectionne(s)</td></tr>'
+  +'</table>'
+  +'<h2>Facebook</h2>'
+  +'<div class="pb"><div class="pt">Facebook - Page "'+esc(firstGarage)+'" - '+date+' a '+heure+'</div>'
+  +'<div class="ptext">'+nl2br(textFbIg)+'</div>'
+  +'<div class="imgs">'+imgsHtml+'</div>'
+  +'<div class="warn">Ce post ne sera PAS envoye sur Facebook (simulation).</div></div>'
+  +'<h2>Instagram</h2>'
+  +'<div class="pb"><div class="pt">Instagram - Carrousel - '+date+'</div>'
+  +'<div class="imgs">'+imgsHtml+'</div>'
+  +'<div class="ptext">'+nl2br(textFbIg)+'</div>'
+  +'<div class="warn">Ce post ne sera PAS envoye sur Instagram (simulation).</div></div>'
+  +'<h2>LinkedIn</h2>'
+  +'<div class="pb"><div class="pt">LinkedIn - Page "'+esc(firstGarage)+'" - '+date+'</div>'
+  +'<div class="ptext">'+nl2br(textLi)+'</div>'
+  +'<div class="imgs">'+liImgHtml+'</div>'
+  +'<div class="warn">Ce post ne sera PAS envoye sur LinkedIn (simulation).</div></div>'
+  +'<div class="ftr"><span>DealerFlow - dealerflow.ch</span><span>Rapport de simulation - Non contractuel - '+now+'</span></div>'
+  +'<sc'+'ript>window.onload=function(){window.print()}<\/sc'+'ript>'
+  +'</body></html>';
+  var blob=new Blob([html],{type:'text/html'});
+  var url=URL.createObjectURL(blob);
+  var a=document.createElement('a');
+  a.href=url;
+  a.download='DealerFlow_Rapport_'+titre.replace(/[^a-zA-Z0-9]/g,'_').substring(0,30)+'.html';
+  a.click();
+  setTimeout(function(){URL.revokeObjectURL(url);},2000);
+}
+
 </script>
 </body>
 </html>
