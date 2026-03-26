@@ -228,7 +228,7 @@ tr:hover td{background:rgba(255,255,255,.015)}
         <div class="section-heading">Informations du garage</div>
         <div class="form-section">
           <label class="form-label">Nom du garage *</label>
-          <input type="text" class="form-input" id="garage-name-input" value="Garage du Lac Sàrl">
+          <input type="text" class="form-input" id="garage-name-input" placeholder="ex: Garage du Lac Sàrl">
         </div>
         <div class="form-row" style="margin-bottom:18px">
           <div><label class="form-label">Ville *</label>
@@ -439,9 +439,9 @@ tr:hover td{background:rgba(255,255,255,.015)}
         <div class="form-card" style="margin-bottom:14px">
           <div class="section-heading">Plateformes</div>
           <div class="platform-toggle">
-            <div class="ptoggle on-fb">f FB</div>
-            <div class="ptoggle on-ig">◉ IG</div>
-            <div class="ptoggle on-li">in LI</div>
+            <div class="ptoggle on-fb" id="ptoggle-fb" onclick="togglePlatform(this,'fb')">f FB</div>
+            <div class="ptoggle on-ig" id="ptoggle-ig" onclick="togglePlatform(this,'ig')">◉ IG</div>
+            <div class="ptoggle on-li" id="ptoggle-li" onclick="togglePlatform(this,'li')">in LI</div>
           </div>
         </div>
         <div class="form-card">
@@ -486,35 +486,35 @@ tr:hover td{background:rgba(255,255,255,.015)}
     <div style="background:rgba(34,197,94,.08);border:1px solid rgba(34,197,94,.2);border-radius:10px;padding:14px;margin-bottom:22px;display:flex;align-items:center;gap:12px">
       <div style="font-size:22px">✅</div>
       <div><div style="font-weight:600;font-size:14px;color:var(--success)">Publication planifiée avec succès</div>
-      <div style="font-size:13px;color:var(--muted)">Mazda CX-5 — 35 900.- CHF · 25 mars 2026 à 09:00 · 4 garages · FB + IG + LI</div></div>
+      <div style="font-size:13px;color:var(--muted)" id="sim-banner-sub">Mazda CX-5 — 35 900.- CHF · 25 mars 2026 à 09:00 · 4 garages · FB + IG + LI</div></div>
     </div>
     <div style="margin-bottom:14px;font-family:'Syne',sans-serif;font-weight:700;font-size:15px">Aperçu du post sur chaque plateforme</div>
 
     <!-- FACEBOOK -->
     <div class="preview-card">
-      <div class="preview-platform"><div style="background:rgba(24,119,242,.2);color:#4f9cf9;font-weight:700;width:26px;height:26px;border-radius:6px;display:flex;align-items:center;justify-content:center">f</div> Facebook — Page "Garage du Lac Sàrl"</div>
-      <div style="display:flex;align-items:center;gap:9px;margin-bottom:10px"><div style="width:34px;height:34px;background:var(--accent);border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:13px;color:#fff">GDL</div><div><div style="font-size:13px;font-weight:600">Garage du Lac Sàrl</div><div style="font-size:11px;color:var(--muted)">Page · <span id="sim-date-fb">25 mars 2026 à 09:00</span> · 🇫🇷</div></div></div>
+      <div class="preview-platform"><div style="background:rgba(24,119,242,.2);color:#4f9cf9;font-weight:700;width:26px;height:26px;border-radius:6px;display:flex;align-items:center;justify-content:center">f</div> Facebook — Page "<span id="sim-name-fb">Garage du Lac Sàrl</span>"</div>
+      <div style="display:flex;align-items:center;gap:9px;margin-bottom:10px"><div style="width:34px;height:34px;background:var(--accent);border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:13px;color:#fff" id="sim-avatar-fb">GDL</div><div><div style="font-size:13px;font-weight:600" id="sim-profile-fb">Garage du Lac Sàrl</div><div style="font-size:11px;color:var(--muted)">Page · <span id="sim-date-fb">25 mars 2026 à 09:00</span> · 🇫🇷</div></div></div>
       <div class="preview-text" id="sim-text-fb" style="white-space:pre-wrap">(saisir un texte dans le formulaire)</div>
       <div class="preview-img-row" id="preview-imgs-fb"><div class="preview-img" style="display:flex;align-items:center;justify-content:center;color:var(--muted);font-size:11px">Photos ici</div></div>
-      <div class="preview-stats-row"><div class="preview-stat">❤️ 0 likes</div><div class="preview-stat">💬 0 commentaires</div><div class="preview-stat">↗ 0 partages</div><div class="preview-stat" style="color:var(--warning)">⏳ Simulation uniquement</div></div>
+      <div class="preview-stats-row"><div class="preview-stat">❤️ <span class="sim-likes">0</span> likes</div><div class="preview-stat">💬 <span class="sim-comments">0</span> commentaires</div><div class="preview-stat">↗ <span class="sim-shares">0</span> partages</div><div class="preview-stat" id="sim-status-fb" style="color:var(--warning)">⏳ Simulation uniquement</div></div>
     </div>
 
     <!-- INSTAGRAM -->
     <div class="preview-card">
-      <div class="preview-platform"><div style="background:rgba(225,48,108,.2);color:#f06292;width:26px;height:26px;border-radius:6px;display:flex;align-items:center;justify-content:center;font-size:13px">◉</div> Instagram — @garage.du.lac.lausanne</div>
-      <div style="display:flex;align-items:center;gap:9px;margin-bottom:10px"><div style="width:34px;height:34px;background:linear-gradient(135deg,#f06292,#e1306c);border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:12px;color:#fff">GDL</div><div><div style="font-size:13px;font-weight:600">garage.du.lac.lausanne</div><div style="font-size:11px;color:var(--muted)"><span id="sim-date-ig">25 mars 2026</span> · 🇫🇷</div></div></div>
+      <div class="preview-platform"><div style="background:rgba(225,48,108,.2);color:#f06292;width:26px;height:26px;border-radius:6px;display:flex;align-items:center;justify-content:center;font-size:13px">◉</div> Instagram — @<span id="sim-handle-ig">garage.du.lac.lausanne</span></div>
+      <div style="display:flex;align-items:center;gap:9px;margin-bottom:10px"><div style="width:34px;height:34px;background:linear-gradient(135deg,#f06292,#e1306c);border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:12px;color:#fff" id="sim-avatar-ig">GDL</div><div><div style="font-size:13px;font-weight:600" id="sim-profile-ig">garage.du.lac.lausanne</div><div style="font-size:11px;color:var(--muted)"><span id="sim-date-ig">25 mars 2026</span> · 🇫🇷</div></div></div>
       <div class="preview-img-row" id="preview-imgs-ig"><div class="preview-img" style="width:110px;height:85px;display:flex;align-items:center;justify-content:center;color:var(--muted);font-size:11px">Photos ici</div></div>
       <div class="preview-text" id="sim-text-ig" style="white-space:pre-wrap;margin-top:8px">(saisir un texte dans le formulaire)</div>
-      <div class="preview-stats-row"><div class="preview-stat">❤️ 0 likes</div><div class="preview-stat">💬 0 commentaires</div><div class="preview-stat">📌 0 enregistrements</div><div class="preview-stat" style="color:var(--warning)">⏳ Simulation uniquement</div></div>
+      <div class="preview-stats-row"><div class="preview-stat">❤️ <span class="sim-likes">0</span> likes</div><div class="preview-stat">💬 <span class="sim-comments">0</span> commentaires</div><div class="preview-stat">📌 <span class="sim-shares">0</span> enregistrements</div><div class="preview-stat" style="color:var(--warning)">⏳ Simulation uniquement</div></div>
     </div>
 
     <!-- LINKEDIN -->
     <div class="preview-card">
-      <div class="preview-platform"><div style="background:rgba(10,102,194,.2);color:#5ba4d4;font-weight:700;font-size:10px;width:26px;height:26px;border-radius:6px;display:flex;align-items:center;justify-content:center">in</div> LinkedIn — Page "Garage du Lac Sàrl"</div>
-      <div style="display:flex;align-items:center;gap:9px;margin-bottom:10px"><div style="width:34px;height:34px;background:rgba(10,102,194,.3);border-radius:7px;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:10px;color:#5ba4d4">GDL</div><div><div style="font-size:13px;font-weight:600">Garage du Lac Sàrl</div><div style="font-size:11px;color:var(--muted)">Entreprise · <span id="sim-date-li">25 mars 2026</span> · 🇫🇷</div></div></div>
+      <div class="preview-platform"><div style="background:rgba(10,102,194,.2);color:#5ba4d4;font-weight:700;font-size:10px;width:26px;height:26px;border-radius:6px;display:flex;align-items:center;justify-content:center">in</div> LinkedIn — Page "<span id="sim-name-li">Garage du Lac Sàrl</span>"</div>
+      <div style="display:flex;align-items:center;gap:9px;margin-bottom:10px"><div style="width:34px;height:34px;background:rgba(10,102,194,.3);border-radius:7px;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:10px;color:#5ba4d4" id="sim-avatar-li">GDL</div><div><div style="font-size:13px;font-weight:600" id="sim-profile-li">Garage du Lac Sàrl</div><div style="font-size:11px;color:var(--muted)">Entreprise · <span id="sim-date-li">25 mars 2026</span> · 🇫🇷</div></div></div>
       <div class="preview-text" id="sim-text-li" style="white-space:pre-wrap">(saisir un texte LinkedIn dans le formulaire)</div>
       <div class="preview-img-row" id="preview-imgs-li"><div class="preview-img" style="width:190px;height:105px;display:flex;align-items:center;justify-content:center;color:var(--muted);font-size:11px">Photo ici</div></div>
-      <div class="preview-stats-row"><div class="preview-stat">❤️ 0 réactions</div><div class="preview-stat">💬 0 commentaires</div><div class="preview-stat">🖱 0 clics</div><div class="preview-stat" style="color:var(--warning)">⏳ Simulation uniquement</div></div>
+      <div class="preview-stats-row"><div class="preview-stat">❤️ <span class="sim-likes">0</span> réactions</div><div class="preview-stat">💬 <span class="sim-comments">0</span> commentaires</div><div class="preview-stat">🖱 <span class="sim-shares">0</span> clics</div><div class="preview-stat" style="color:var(--warning)">⏳ Simulation uniquement</div></div>
     </div>
     <div style="background:rgba(37,99,235,.08);border:1px solid rgba(37,99,235,.2);border-radius:10px;padding:16px;text-align:center;margin-top:20px">
       <div style="font-size:13px;color:var(--muted);margin-bottom:11px">Téléchargez le rapport de simulation pour présentation à votre direction marketing</div>
@@ -816,7 +816,9 @@ function planifierAnnonce(){
   var heure=heureInput?heureInput.value:'09:00';
   var selectedGarages=document.querySelectorAll('.garage-chip.selected');
   var nbGarages=selectedGarages.length;
-  var firstGarage=nbGarages>0?selectedGarages[0].textContent.trim().replace('✓','').trim():'(aucun garage)';
+  var rawChip=nbGarages>0?selectedGarages[0].textContent.trim().replace('✓','').trim():'(aucun garage)';
+  // Extraire juste le nom : supprimer emoji drapeau en début + la ville après " — "
+  var firstGarage=rawChip.replace(/^[\u{1F1E0}-\u{1F1FF}]{2}\s*/u,'').split(' — ')[0].trim()||rawChip;
   var garageLabel=nbGarages===1?firstGarage:nbGarages+' garages';
   var langSel=document.getElementById('post-lang');
   var langText=langSel?langSel.options[langSel.selectedIndex].text:'🇫🇷 Français';
@@ -836,9 +838,20 @@ function planifierAnnonce(){
     if(el)el.textContent=date+' à '+heure;
   });
 
+  // Mettre à jour les noms du garage dans les previews
+  var garageSimName=nbGarages===1?firstGarage:(nbGarages>1?firstGarage+' + '+(nbGarages-1)+' autre(s)':'Garage');
+  var igHandle=garageSimName.toLowerCase().replace(/[éèê]/g,'e').replace(/[àâ]/g,'a').replace(/[ùû]/g,'u').replace(/[îï]/g,'i').replace(/[^a-z0-9]/g,'.');
+  var initials=garageSimName.split(/\s+/).map(function(w){return w[0]||'';}).join('').toUpperCase().substring(0,3);
+  ['sim-name-fb','sim-name-li'].forEach(function(id){var el=document.getElementById(id);if(el)el.textContent=garageSimName;});
+  ['sim-profile-fb','sim-profile-li'].forEach(function(id){var el=document.getElementById(id);if(el)el.textContent=garageSimName;});
+  ['sim-avatar-fb','sim-avatar-ig','sim-avatar-li'].forEach(function(id){var el=document.getElementById(id);if(el)el.textContent=initials;});
+  var igHandleEl=document.getElementById('sim-handle-ig');if(igHandleEl)igHandleEl.textContent=igHandle;
+  var igProfileEl=document.getElementById('sim-profile-ig');if(igProfileEl)igProfileEl.textContent=igHandle;
+
   // Bannière succès
-  var bannerSub=document.querySelector('#screen-simulation .content > div:first-child > div:last-child > div:last-child');
-  if(bannerSub)bannerSub.textContent=(titre+(prix?' — '+prix+' CHF':''))+' · '+date+' à '+heure+' · '+garageLabel+' · FB + IG + LI';
+  var activePlats=getActivePlatforms();
+  var bannerSub=document.getElementById('sim-banner-sub');
+  if(bannerSub)bannerSub.textContent=(titre+(prix?' — '+prix+' CHF':''))+' · '+date+' à '+heure+' · '+garageLabel+' · '+activePlats.join(' + ');
 
   // Ajouter dans "Toutes les annonces"
   var tbody=document.querySelector('#screen-annonces table tbody');
@@ -856,8 +869,12 @@ function planifierAnnonce(){
     tbody.insertBefore(row,tbody.firstChild);
   }
 
+  // Mettre à jour le dashboard
+  updateDashboardAfterPlan(titre+(prix?' — '+prix+' CHF':''), firstGarage, date, langBadge, imgUrls.length>1?'<span class="fmt-badge carousel">⊞ Carrousel</span>':'<span class="fmt-badge photo">▣ Photo</span>');
   // Naviguer vers simulation
   showScreen('simulation',document.querySelectorAll('.nav-item')[3]);
+  // Lancer animation stats après 3s
+  animateSimStats();
 }
 function updatePreviewImages(){
   var configs=[
@@ -907,7 +924,129 @@ function filterDashboard(val){var title=document.getElementById('dash-title');if
 function switchTab(el,id){document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));document.querySelectorAll('.tab-content').forEach(t=>t.classList.remove('active'));el.classList.add('active');document.getElementById('tab-'+id).classList.add('active')}
 function toggleAll(){const chips=document.querySelectorAll('.garage-chip');const allSel=Array.from(chips).every(c=>c.classList.contains('selected'));chips.forEach(c=>allSel?c.classList.remove('selected'):c.classList.add('selected'));updateCount()}
 function updateCount(){setTimeout(()=>{document.getElementById('selectedCount').textContent=document.querySelectorAll('.garage-chip.selected').length},50)}
-function goToOAuth(){const name=document.getElementById('garage-name-input').value||'Garage du Lac Sàrl';const city=document.getElementById('garage-city-input').value||'Lausanne';const lang=document.getElementById('garage-lang-input');const langText=lang?lang.options[lang.selectedIndex].text:'🇫🇷 Français';document.getElementById('oauth-garage-name').textContent=name;document.getElementById('oauth-garage-city').textContent=city+' · '+langText;showScreen('oauth',document.querySelectorAll('.nav-item')[1])}
+function goToOAuth(){
+  var name=document.getElementById('garage-name-input').value.trim()||'Garage du Lac Sàrl';
+  var city=document.getElementById('garage-city-input').value||'Lausanne';
+  var lang=document.getElementById('garage-lang-input');
+  var langText=lang?lang.options[lang.selectedIndex].text:'🇫🇷 Français';
+  var langCode=lang?lang.value:'fr';
+  document.getElementById('oauth-garage-name').textContent=name;
+  document.getElementById('oauth-garage-city').textContent=city+' · '+langText;
+  // Réinitialiser l'état OAuth pour le nouveau garage
+  connected={fb:false,ig:false,li:false};
+  document.getElementById('oauth-progress').style.width='0%';
+  document.getElementById('oauth-progress-label').textContent='0 / 3 connectées';
+  document.getElementById('oauth-progress-pct').textContent='0%';
+  document.getElementById('oauth-next-btn').style.display='none';
+  ['cp-fb','cp-ig','cp-li'].forEach(function(id){document.getElementById(id).classList.remove('connected');});
+  document.getElementById('fb-status').style.color='var(--muted)';document.getElementById('fb-status').textContent='Non connecté';
+  document.getElementById('ig-status').style.color='var(--muted)';document.getElementById('ig-status').textContent='Non connecté';
+  document.getElementById('li-status').style.color='var(--muted)';document.getElementById('li-status').textContent='Non connecté';
+  var btnFb=document.getElementById('btn-fb');if(btnFb){btnFb.className='connect-btn-sm connect-btn-action';btnFb.textContent='Connecter';btnFb.onclick=function(){connectPlatform('fb');}}
+  var btnIg=document.getElementById('btn-ig');if(btnIg){btnIg.className='connect-btn-sm connect-btn-action';btnIg.textContent='Connecter';btnIg.onclick=function(){connectPlatform('ig');}}
+  var btnLi=document.getElementById('btn-li');if(btnLi){btnLi.className='connect-btn-sm connect-btn-action';btnLi.textContent='Connecter';btnLi.onclick=function(){connectPlatform('li');}}
+  // Ajouter le garage au système
+  addGarageToSystem(name, city, langCode, langText);
+  showScreen('oauth',document.querySelectorAll('.nav-item')[1]);
+}
+function addGarageToSystem(name, city, langCode, langText){
+  var flag=langCode==='de'?'🇩🇪':langCode==='it'?'🇮🇹':'🇫🇷';
+  var chipLabel=flag+' '+name+' — '+city;
+  // Sélecteur dans "Créer annonce"
+  var selector=document.getElementById('garageSelector');
+  if(selector){
+    var exists=Array.from(selector.querySelectorAll('.garage-chip')).some(function(c){return c.textContent.replace('✓','').trim()===chipLabel;});
+    if(!exists){
+      var chip=document.createElement('div');
+      chip.className='garage-chip';
+      chip.textContent=chipLabel;
+      chip.onclick=function(){this.classList.toggle('selected');updateCount();};
+      selector.appendChild(chip);
+    }
+  }
+  // Filtre dashboard
+  var filter=document.getElementById('dash-garage-filter');
+  if(filter){
+    var existsF=Array.from(filter.options).some(function(o){return o.text.includes(name);});
+    if(!existsF){
+      var opt=document.createElement('option');
+      opt.value=name.toLowerCase().replace(/[^a-z0-9]/g,'').substring(0,8);
+      opt.textContent=chipLabel;
+      filter.appendChild(opt);
+    }
+  }
+  // Grille garages
+  var grid=document.querySelector('.garage-grid');
+  if(grid){
+    var existsG=Array.from(grid.querySelectorAll('.garage-name')).some(function(n){return n.textContent===name;});
+    if(!existsG){
+      var addCard=grid.querySelector('[onclick*="inscription"]');
+      var card=document.createElement('div');
+      card.className='garage-card';
+      card.style.cursor='pointer';
+      (function(n,c,f,lt){card.onclick=function(){openGarageDashboard(n,c+', · '+f+' '+lt,'ab-pending','⏳ En attente');};})(name,city,flag,langText);
+      card.innerHTML='<div class="garage-card-header"><div class="garage-icon">'+flag+'</div><span class="activation-badge ab-pending">⏳ En attente</span></div>'
+        +'<div class="garage-name">'+name+'</div>'
+        +'<div class="garage-location">📍 '+city+' · '+langText+'</div>'
+        +'<div class="garage-platforms"><div class="picon picon-off">f</div><div class="picon picon-off">◉</div><div class="picon picon-off">in</div></div>'
+        +'<div style="font-size:12px;color:var(--warning);margin-top:10px;padding-top:10px;border-top:1px solid var(--border)">Connexion réseaux en cours</div>';
+      if(addCard)grid.insertBefore(card,addCard);else grid.appendChild(card);
+    }
+  }
+}
+function animateSimStats(){
+  // Reset à 0
+  document.querySelectorAll('.sim-likes,.sim-comments,.sim-shares').forEach(function(el){el.textContent='0';});
+  var targets={likes:[12,8,5],comments:[3,2,1],shares:[6,4,2]};
+  setTimeout(function(){
+    // Animation compteur sur 1.5s
+    var duration=1500,steps=30,interval=duration/steps;
+    var step=0;
+    var timer=setInterval(function(){
+      step++;
+      var progress=step/steps;
+      document.querySelectorAll('.sim-likes').forEach(function(el,i){el.textContent=Math.round((targets.likes[i]||12)*progress);});
+      document.querySelectorAll('.sim-comments').forEach(function(el,i){el.textContent=Math.round((targets.comments[i]||3)*progress);});
+      document.querySelectorAll('.sim-shares').forEach(function(el,i){el.textContent=Math.round((targets.shares[i]||6)*progress);});
+      if(step>=steps){
+        clearInterval(timer);
+        var statusBadge=document.getElementById('sim-status-fb');
+        if(statusBadge){statusBadge.style.color='var(--success)';statusBadge.textContent='✓ Publication confirmée';}
+      }
+    },interval);
+  },3000);
+}
+function updateDashboardAfterPlan(titre,firstGarage,date,langBadge,fmt){
+  // Incrémenter compteur planifiés
+  var planCard=document.querySelector('#screen-dashboard .stat-card:nth-child(3) .stat-value');
+  if(planCard)planCard.textContent=parseInt(planCard.textContent||'34')+1;
+  // Ajouter dans publications récentes
+  var tbody=document.querySelector('#screen-dashboard table tbody');
+  if(tbody){
+    var row=document.createElement('tr');
+    row.innerHTML='<td><strong>'+titre+'</strong></td>'
+      +'<td>'+langBadge+'</td>'
+      +'<td>'+fmt+'</td>'
+      +'<td style="font-size:12px">'+firstGarage+'</td>'
+      +'<td><div class="platform-tags"><span class="ptag ptag-fb">FB</span><span class="ptag ptag-ig">IG</span><span class="ptag ptag-li">LI</span></div></td>'
+      +'<td><span style="color:var(--muted)">—</span></td>'
+      +'<td style="font-size:12px">'+date+'</td>'
+      +'<td><span class="status-dot dot-yellow"></span>Planifiée</td>';
+    tbody.insertBefore(row,tbody.firstChild);
+  }
+}
+function togglePlatform(el,platform){
+  if(el.classList.contains('on-'+platform)){el.classList.remove('on-'+platform);}
+  else{el.classList.add('on-'+platform);}
+}
+function getActivePlatforms(){
+  var plats=[];
+  var fb=document.getElementById('ptoggle-fb');var ig=document.getElementById('ptoggle-ig');var li=document.getElementById('ptoggle-li');
+  if(fb&&fb.classList.contains('on-fb'))plats.push('FB');
+  if(ig&&ig.classList.contains('on-ig'))plats.push('IG');
+  if(li&&li.classList.contains('on-li'))plats.push('LI');
+  return plats.length>0?plats:['FB','IG','LI'];
+}
 let connected={fb:true,ig:false,li:false};
 function connectPlatform(p){connected[p]=true;document.getElementById('cp-'+p).classList.add('connected');document.getElementById(p+'-status').style.color='var(--success)';document.getElementById(p+'-status').textContent='✓ Connecté';const btn=document.getElementById('btn-'+p);if(btn){btn.className='connect-btn-sm connect-btn-done';btn.textContent='Connecté';btn.onclick=null}const total=Object.values(connected).filter(Boolean).length;const pct=Math.round(total/3*100);document.getElementById('oauth-progress').style.width=pct+'%';document.getElementById('oauth-progress-label').textContent=total+' / 3 connectées';document.getElementById('oauth-progress-pct').textContent=pct+'%';if(total===3)document.getElementById('oauth-next-btn').style.display='block'}
 function downloadReport(){
@@ -923,7 +1062,8 @@ function downloadReport(){
   var langText=langSel?langSel.options[langSel.selectedIndex].text:'Francais';
   var selectedGarages=document.querySelectorAll('.garage-chip.selected');
   var nbGarages=selectedGarages.length;
-  var firstGarage=nbGarages>0?selectedGarages[0].textContent.replace('checkmark','').trim():'(aucun garage)';
+  var rawChipDl=nbGarages>0?selectedGarages[0].textContent.replace('✓','').trim():'(aucun garage)';
+  var firstGarage=rawChipDl.replace(/^[\u{1F1E0}-\u{1F1FF}]{2}\s*/u,'').split(' — ')[0].trim()||rawChipDl;
   var fmt=imgUrls.length>1?'Carrousel - '+imgUrls.length+' images':'Photo unique';
   var now=new Date().toLocaleDateString('fr-CH',{day:'2-digit',month:'long',year:'numeric'});
   var esc=function(s){return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');};
