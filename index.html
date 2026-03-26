@@ -363,7 +363,7 @@ tr:hover td{background:rgba(255,255,255,.015)}
     <div style="display:flex;gap:8px;align-items:center">
       <span class="tag">Étape 3 / 4</span>
       <button class="btn btn-secondary btn-sm">Brouillon</button>
-      <button class="btn btn-primary btn-sm" onclick="showScreen('simulation',document.querySelectorAll('.nav-item')[3])">Planifier → Simuler</button>
+      <button class="btn btn-primary btn-sm" onclick="planifierAnnonce()">Planifier → Simuler</button>
     </div>
   </div>
   <div class="content">
@@ -390,8 +390,8 @@ tr:hover td{background:rgba(255,255,255,.015)}
         <div class="form-card" style="margin-bottom:14px">
           <div class="section-heading">Contenu</div>
           <div class="form-row3" style="margin-bottom:18px">
-            <div><label class="form-label">Titre interne</label><input type="text" class="form-input" value="Mazda CX-5 — Garage du Lac"></div>
-            <div><label class="form-label">Prix (CHF)</label><input type="text" class="form-input" value="35 900.-"></div>
+            <div><label class="form-label">Titre interne</label><input type="text" class="form-input" id="annonce-titre" placeholder="ex: Mazda CX-5 — Garage du Lac"></div>
+            <div><label class="form-label">Prix (CHF)</label><input type="text" class="form-input" id="annonce-prix" placeholder="ex: 35 900.-"></div>
             <div><label class="form-label">Langue du post</label>
               <select class="form-select" id="post-lang">
                 <option value="fr">🇫🇷 Français</option>
@@ -407,25 +407,11 @@ tr:hover td{background:rgba(255,255,255,.015)}
             </div>
             <div class="tab-content active" id="tab-fb">
               <label class="form-label">Texte FB & Instagram</label>
-              <textarea class="form-textarea" id="text-fb-ig">🚗 Superbe opportunité ! Mazda CX-5 2.0 Skyactiv-G, 2023, 24 000 km
-
-✅ Contrôle technique OK · Garantie 12 mois · Historique complet
-Prix : 35 900.- CHF
-
-Contactez-nous : +41 21 612 34 56
-📍 Garage du Lac Sàrl — Lausanne
-
-#mazda #cx5 #occasion #lausanne #dealerflow #automobile</textarea>
+              <textarea class="form-textarea" id="text-fb-ig" placeholder="Rédigez votre texte pour Facebook et Instagram..."></textarea>
             </div>
             <div class="tab-content" id="tab-li">
               <label class="form-label">Texte LinkedIn (ton professionnel)</label>
-              <textarea class="form-textarea" id="text-li">Garage du Lac Sàrl est heureux de vous présenter ce véhicule d'occasion sélectionné avec soin.
-
-Mazda CX-5 2.0 Skyactiv-G · 2023 · 24 000 km · Garantie 12 mois
-Prix : 35 900.- CHF
-
-Contact : +41 21 612 34 56 · Lausanne
-#mazda #cx5 #vehiculeoccasion #lausanne</textarea>
+              <textarea class="form-textarea" id="text-li" placeholder="Rédigez votre texte LinkedIn (ton professionnel)..."></textarea>
             </div>
           </div>
           <div class="form-section">
@@ -506,15 +492,15 @@ Contact : +41 21 612 34 56 · Lausanne
     <div class="preview-card">
       <div class="preview-platform"><div style="background:rgba(24,119,242,.2);color:#4f9cf9;font-weight:700;width:26px;height:26px;border-radius:6px;display:flex;align-items:center;justify-content:center">f</div> Facebook — Page "Garage du Lac Sàrl"</div>
       <div style="display:flex;align-items:center;gap:9px;margin-bottom:10px"><div style="width:34px;height:34px;background:var(--accent);border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:13px">GDL</div><div><div style="font-size:13px;font-weight:600">Garage du Lac Sàrl</div><div style="font-size:11px;color:var(--muted)">Page · 25 mars 2026 à 09:00 · 🇫🇷</div></div></div>
-      <div class="preview-text">🚗 Superbe opportunité ! Mazda CX-5 2.0 Skyactiv-G, 2023, 24 000 km<br>✅ Prix : 35 900.- CHF · Lausanne<br>#mazda #cx5 #occasion #lausanne #dealerflow</div>
+      <div class="preview-text" id="sim-text-fb">🚗 Superbe opportunité ! Mazda CX-5 2.0 Skyactiv-G, 2023, 24 000 km<br>✅ Prix : 35 900.- CHF · Lausanne<br>#mazda #cx5 #occasion #lausanne #dealerflow</div>
       <div class="preview-img-row" id="preview-imgs-fb"><div class="preview-img">🚗</div><div class="preview-img">🚙</div><div class="preview-img">🪑</div></div>
-      <div class="preview-text">🚗 Mazda CX-5 2.0 Skyactiv-G, 2023, 24 000 km · 35 900.- CHF · Lausanne<br>#mazda #cx5 #occasion #lausanne #dealerflow</div>
+      <div class="preview-text" id="sim-text-ig">🚗 Mazda CX-5 2.0 Skyactiv-G, 2023, 24 000 km · 35 900.- CHF · Lausanne<br>#mazda #cx5 #occasion #lausanne #dealerflow</div>
       <div class="preview-stats-row"><div class="preview-stat">❤️ 0 likes</div><div class="preview-stat">💬 0 commentaires</div><div class="preview-stat" style="color:var(--warning)">⏳ Simulation uniquement</div></div>
     </div>
     <div class="preview-card">
       <div class="preview-platform"><div style="background:rgba(10,102,194,.2);color:#5ba4d4;font-weight:700;font-size:10px;width:26px;height:26px;border-radius:6px;display:flex;align-items:center;justify-content:center">in</div> LinkedIn — Page "Garage du Lac Sàrl"</div>
       <div style="display:flex;align-items:center;gap:9px;margin-bottom:10px"><div style="width:34px;height:34px;background:rgba(10,102,194,.3);border-radius:7px;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:10px;color:#5ba4d4">GDL</div><div><div style="font-size:13px;font-weight:600">Garage du Lac Sàrl</div><div style="font-size:11px;color:var(--muted)">Entreprise · 25 mars 2026 · 🇫🇷</div></div></div>
-      <div class="preview-text">Garage du Lac Sàrl est heureux de vous présenter ce véhicule d'occasion.<br>Mazda CX-5 2.0 Skyactiv-G · 2023 · 24 000 km · 35 900.- CHF · Lausanne</div>
+      <div class="preview-text" id="sim-text-li">Garage du Lac Sàrl est heureux de vous présenter ce véhicule d'occasion.<br>Mazda CX-5 2.0 Skyactiv-G · 2023 · 24 000 km · 35 900.- CHF · Lausanne</div>
       <div class="preview-img-row"><div class="preview-img" style="width:190px;height:105px">🚗</div></div>
       <div class="preview-stats-row"><div class="preview-stat">❤️ 0 réactions</div><div class="preview-stat">💬 0 commentaires</div><div class="preview-stat" style="color:var(--warning)">⏳ Simulation uniquement</div></div>
     </div>
@@ -806,6 +792,46 @@ document.addEventListener('DOMContentLoaded',function(){
     });
   });
 });
+function planifierAnnonce(){
+  var titre=document.getElementById('annonce-titre').value.trim()||'Nouvelle annonce';
+  var prix=document.getElementById('annonce-prix').value.trim()||'—';
+  var textFb=document.getElementById('text-fb-ig').value.trim();
+  var textLi=document.getElementById('text-li').value.trim();
+  var date=document.querySelector('#screen-nouvelle input[type="date"]').value||'25 mars 2026';
+  var heure=document.querySelector('#screen-nouvelle input[type="time"]').value||'09:00';
+  var nbGarages=document.querySelectorAll('.garage-chip.selected').length;
+  var langSel=document.getElementById('post-lang');
+  var langText=langSel?langSel.options[langSel.selectedIndex].text:'🇫🇷 Français';
+  var langBadge=langText.includes('Deutsch')?'<span class="lang-badge lang-de">DE</span>':langText.includes('Italiano')?'<span class="lang-badge lang-it">IT</span>':'<span class="lang-badge lang-fr">FR</span>';
+
+  // Mettre à jour les previews simulation
+  var nl2br=function(t){return t.replace(/\n/g,'<br>');};
+  document.getElementById('sim-text-fb').innerHTML=textFb?nl2br(textFb):'(aucun texte saisi)';
+  document.getElementById('sim-text-ig').innerHTML=textFb?nl2br(textFb):'(aucun texte saisi)';
+  document.getElementById('sim-text-li').innerHTML=textLi?nl2br(textLi):(textFb?nl2br(textFb):'(aucun texte saisi)');
+
+  // Mettre à jour la bannière succès
+  var banner=document.querySelector('#screen-simulation .content > div:first-child div:last-child div:last-child');
+  if(banner) banner.textContent=titre+' — '+prix+' CHF · '+date+' à '+heure+' · '+nbGarages+' garage(s) · FB + IG + LI';
+
+  // Ajouter dans la liste "Toutes les annonces"
+  var tbody=document.querySelector('#screen-annonces table tbody');
+  if(tbody){
+    var fmt=imgUrls.length>1?'<span class="fmt-badge carousel">⊞ Carrousel</span>':'<span class="fmt-badge photo">▣ Photo</span>';
+    var row=document.createElement('tr');
+    row.innerHTML='<td><strong>'+titre+(prix?' — '+prix+' CHF':'')+'</strong></td>'
+      +'<td>'+langBadge+'</td>'
+      +'<td>'+fmt+'</td>'
+      +'<td><span class="tag">'+nbGarages+' garage(s)</span></td>'
+      +'<td><span style="color:var(--muted)">—</span></td>'
+      +'<td style="font-size:12px">'+date+'</td>'
+      +'<td><span class="status-dot dot-yellow"></span>Planifiée</td>';
+    tbody.insertBefore(row,tbody.firstChild);
+  }
+
+  // Aller sur la simulation
+  showScreen('simulation',document.querySelectorAll('.nav-item')[3]);
+}
 function updatePreviewImages(){
   var rows=['preview-imgs-fb','preview-imgs-ig'];
   rows.forEach(function(rowId){
