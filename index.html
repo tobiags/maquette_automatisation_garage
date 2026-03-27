@@ -983,6 +983,8 @@ function addGarageToSystem(name, city, langCode, langText){
   if(selector){
     var exists=Array.from(selector.querySelectorAll('.garage-chip')).some(function(c){return c.textContent.replace('✓','').trim()===chipLabel;});
     if(!exists){
+      // Désélectionner tous les chips existants : le nouveau garage sera le seul actif
+      selector.querySelectorAll('.garage-chip.selected').forEach(function(c){c.classList.remove('selected');});
       var chip=document.createElement('div');
       chip.className='garage-chip selected';
       chip.textContent=chipLabel;
