@@ -446,6 +446,12 @@ tr:hover td{background:rgba(255,255,255,.015)}
         </div>
         <div class="form-card">
           <div class="section-heading">Garages<span class="select-all" onclick="toggleAll()">Tout</span></div>
+          <div style="display:flex;gap:5px;margin-bottom:8px;flex-wrap:wrap">
+            <button onclick="filterGaragesByLang('all')" id="gbf-all" style="padding:4px 10px;border-radius:6px;border:1px solid var(--accent);background:rgba(37,99,235,.15);color:var(--accent-light);font-size:11px;cursor:pointer;font-weight:600">Tous</button>
+            <button onclick="filterGaragesByLang('fr')" id="gbf-fr" style="padding:4px 10px;border-radius:6px;border:1px solid var(--border);background:var(--surface2);color:var(--muted);font-size:11px;cursor:pointer">🇫🇷 FR</button>
+            <button onclick="filterGaragesByLang('de')" id="gbf-de" style="padding:4px 10px;border-radius:6px;border:1px solid var(--border);background:var(--surface2);color:var(--muted);font-size:11px;cursor:pointer">🇩🇪 DE</button>
+            <button onclick="filterGaragesByLang('it')" id="gbf-it" style="padding:4px 10px;border-radius:6px;border:1px solid var(--border);background:var(--surface2);color:var(--muted);font-size:11px;cursor:pointer">🇮🇹 IT</button>
+          </div>
           <div class="garage-selector" id="garageSelector">
             <div class="garage-chip selected" onclick="this.classList.toggle('selected');updateCount()">🇫🇷 Garage du Lac — Lausanne</div>
             <div class="garage-chip selected" onclick="this.classList.toggle('selected');updateCount()">🇫🇷 AutoLéman — Genève</div>
@@ -948,7 +954,22 @@ function supprimerCurrentGarage(){
 function filterDashboard(val){var title=document.getElementById('dash-title');if(val==='all'){title.textContent='Tableau de bord — Réseau global';}else{var sel=document.getElementById('dash-garage-filter');var label=sel.options[sel.selectedIndex].text.replace(/^[^\s]+\s/,'');title.textContent='Tableau de bord — '+label;}}
 function filterByLang(lang){var rows=document.querySelectorAll('#screen-dashboard table tbody tr');rows.forEach(function(row){if(!lang||lang==='all'){row.style.display='';}else{var badge=row.querySelector('.lang-badge');var show=badge&&badge.classList.contains('lang-'+lang);row.style.display=show?'':'none';}});var sel=document.getElementById('dash-lang-filter');if(sel)sel.value=lang||'all';}
 function switchTab(el,id){document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));document.querySelectorAll('.tab-content').forEach(t=>t.classList.remove('active'));el.classList.add('active');document.getElementById('tab-'+id).classList.add('active')}
-function toggleAll(){const chips=document.querySelectorAll('.garage-chip');const allSel=Array.from(chips).every(c=>c.classList.contains('selected'));chips.forEach(c=>allSel?c.classList.remove('selected'):c.classList.add('selected'));updateCount()}
+function toggleAll(){const chips=document.querySelectorAll('.garage-chip');const allSel=Array.from(chips).every(c=>c.classList.contains('selected'));chips.forEach(c=>allSel?c.classList.remove('selected'):c.classList.add('selected'));updateCount();}
+function filterGaragesByLang(lang){
+  var flags={'fr':'🇫🇷','de':'🇩🇪','it':'🇮🇹'};
+  var chips=document.querySelectorAll('#garageSelector .garage-chip');
+  chips.forEach(function(c){
+    var txt=c.textContent.replace('✓','').trim();
+    if(lang==='all'){c.classList.add('selected');}
+    else{var flag=flags[lang];var match=txt.startsWith(flag);match?c.classList.add('selected'):c.classList.remove('selected');}
+  });
+  ['all','fr','de','it'].forEach(function(k){
+    var btn=document.getElementById('gbf-'+k);if(!btn)return;
+    if(k===lang){btn.style.borderColor='var(--accent)';btn.style.background='rgba(37,99,235,.15)';btn.style.color='var(--accent-light)';}
+    else{btn.style.borderColor='var(--border)';btn.style.background='var(--surface2)';btn.style.color='var(--muted)';}
+  });
+  updateCount();
+}
 function updateCount(){setTimeout(()=>{document.getElementById('selectedCount').textContent=document.querySelectorAll('.garage-chip.selected').length},50)}
 function goToOAuth(){
   var name=document.getElementById('garage-name-input').value.trim()||'Garage du Lac Sàrl';
