@@ -330,7 +330,7 @@ tr:hover td{background:rgba(255,255,255,.015)}
               <div style="background:rgba(24,119,242,.2);color:#4f9cf9;font-weight:700;font-size:15px;width:34px;height:34px;border-radius:8px;display:flex;align-items:center;justify-content:center">f</div>
               <div><div style="font-size:13px;font-weight:500">Facebook</div><div id="fb-status" style="font-size:12px;color:var(--success)">✓ Page connectée</div></div>
             </div>
-            <button class="connect-btn-sm connect-btn-done">Connecté</button>
+            <button class="connect-btn-sm connect-btn-done" id="btn-fb">Connecté</button>
           </div>
           <div class="connect-platform" id="cp-ig">
             <div class="connect-platform-left">
@@ -540,8 +540,8 @@ tr:hover td{background:rgba(255,255,255,.015)}
         <option value="ba">🇮🇹 Bellinzona Auto SA</option>
         <option value="lv">🇮🇹 Locarno Véhicules SA</option>
       </select>
-      <select style="background:var(--surface2);border:1px solid var(--border);border-radius:8px;padding:6px 11px;color:var(--text);font-size:13px;outline:none">
-        <option>Toutes langues</option><option>🇫🇷 Français</option><option>🇩🇪 Deutsch</option><option>🇮🇹 Italiano</option>
+      <select id="dash-lang-filter" onchange="filterByLang(this.value)" style="background:var(--surface2);border:1px solid var(--border);border-radius:8px;padding:6px 11px;color:var(--text);font-size:13px;outline:none">
+        <option value="all">Toutes langues</option><option value="fr">🇫🇷 Français</option><option value="de">🇩🇪 Deutsch</option><option value="it">🇮🇹 Italiano</option>
       </select>
       <button class="btn btn-primary btn-sm" onclick="showScreen('inscription',document.querySelectorAll('.nav-item')[0])">+ Inscrire un garage</button>
     </div>
@@ -563,7 +563,7 @@ tr:hover td{background:rgba(255,255,255,.015)}
     <div class="table-card">
       <div class="table-header">
         <div class="table-title">Publications récentes</div>
-        <div style="display:flex;gap:6px"><span class="tag">Toutes</span><span class="tag">🇫🇷 FR</span><span class="tag">🇩🇪 DE</span><span class="tag">🇮🇹 IT</span></div>
+        <div style="display:flex;gap:6px"><span class="tag" style="cursor:pointer" onclick="filterByLang('all')">Toutes</span><span class="tag" style="cursor:pointer" onclick="filterByLang('fr')">🇫🇷 FR</span><span class="tag" style="cursor:pointer" onclick="filterByLang('de')">🇩🇪 DE</span><span class="tag" style="cursor:pointer" onclick="filterByLang('it')">🇮🇹 IT</span></div>
       </div>
       <table>
         <thead><tr><th>Annonce</th><th>Langue</th><th>Format</th><th>Garage</th><th>Plateformes</th><th>Stats</th><th>Date</th><th>Statut</th></tr></thead>
@@ -677,6 +677,8 @@ tr:hover td{background:rgba(255,255,255,.015)}
     </div>
     <div style="display:flex;align-items:center;gap:8px">
       <span id="gd-status-badge" class="activation-badge ab-active">✓ Actif</span>
+      <button id="btn-valider-garage" class="btn btn-success btn-sm" style="display:none" onclick="validerCurrentGarage()">✓ Valider</button>
+      <button class="btn btn-sm" style="background:rgba(239,68,68,.15);color:var(--danger);border:1px solid rgba(239,68,68,.3)" onclick="supprimerCurrentGarage()">✗ Supprimer</button>
       <button class="btn btn-primary btn-sm" onclick="showScreen('nouvelle',document.querySelectorAll('.nav-item')[2])">+ Nouvelle annonce</button>
     </div>
   </div>
@@ -840,8 +842,8 @@ function planifierAnnonce(){
 
   // Mettre à jour les noms du garage dans les previews
   var garageSimName=nbGarages===1?firstGarage:(nbGarages>1?firstGarage+' + '+(nbGarages-1)+' autre(s)':'Garage');
-  var igHandle=garageSimName.toLowerCase().replace(/[éèê]/g,'e').replace(/[àâ]/g,'a').replace(/[ùû]/g,'u').replace(/[îï]/g,'i').replace(/[^a-z0-9]/g,'.');
-  var initials=garageSimName.split(/\s+/).map(function(w){return w[0]||'';}).join('').toUpperCase().substring(0,3);
+  var igHandle=firstGarage.toLowerCase().replace(/[éèê]/g,'e').replace(/[àâ]/g,'a').replace(/[ùû]/g,'u').replace(/[îï]/g,'i').replace(/[^a-z0-9]/g,'.').replace(/\.+/g,'.').replace(/^\.|\.$/g,'');
+  var initials=firstGarage.split(/\s+/).map(function(w){return w[0]||'';}).join('').toUpperCase().substring(0,3);
   ['sim-name-fb','sim-name-li'].forEach(function(id){var el=document.getElementById(id);if(el)el.textContent=garageSimName;});
   ['sim-profile-fb','sim-profile-li'].forEach(function(id){var el=document.getElementById(id);if(el)el.textContent=garageSimName;});
   ['sim-avatar-fb','sim-avatar-ig','sim-avatar-li'].forEach(function(id){var el=document.getElementById(id);if(el)el.textContent=initials;});
@@ -870,7 +872,7 @@ function planifierAnnonce(){
   }
 
   // Mettre à jour le dashboard
-  updateDashboardAfterPlan(titre+(prix?' — '+prix+' CHF':''), firstGarage, date, langBadge, imgUrls.length>1?'<span class="fmt-badge carousel">⊞ Carrousel</span>':'<span class="fmt-badge photo">▣ Photo</span>');
+  updateDashboardAfterPlan(titre+(prix?' — '+prix+' CHF':''), firstGarage, date, langBadge, imgUrls.length>1?'<span class="fmt-badge carousel">⊞ Carrousel</span>':'<span class="fmt-badge photo">▣ Photo</span>', activePlats);
   // Naviguer vers simulation
   showScreen('simulation',document.querySelectorAll('.nav-item')[3]);
   // Lancer animation stats après 3s
@@ -908,7 +910,9 @@ function selectPack(pack){
   });
   document.getElementById('pack-label').textContent=labels[pack];
 }
+var currentGarageCard=null;
 function openGarageDashboard(name,location,statusClass,statusText){
+  try{currentGarageCard=(event&&event.currentTarget)?event.currentTarget.closest('.garage-card'):null;}catch(e){currentGarageCard=null;}
   document.getElementById('gd-title').textContent=name;
   document.getElementById('gd-location').textContent=location;
   document.getElementById('gd-garage-name-table').textContent=name;
@@ -918,9 +922,31 @@ function openGarageDashboard(name,location,statusClass,statusText){
   document.getElementById('nav-garage-name').textContent=name;
   var navDetail=document.getElementById('nav-garage-detail');
   navDetail.style.display='flex';
+  var validerBtn=document.getElementById('btn-valider-garage');
+  if(validerBtn)validerBtn.style.display=statusClass==='ab-pending'?'':'none';
   showScreen('garage-detail',navDetail);
 }
+function validerCurrentGarage(){
+  if(!currentGarageCard)return;
+  var badge=currentGarageCard.querySelector('.activation-badge');
+  if(badge){badge.className='activation-badge ab-active';badge.textContent='✓ Actif';}
+  var warn=currentGarageCard.querySelector('[style*="warning"]');
+  if(warn){warn.textContent='✓ Actif — Paiement confirmé';warn.style.color='var(--success)';}
+  var platforms=currentGarageCard.querySelector('.garage-platforms');
+  if(platforms){platforms.querySelectorAll('.picon-off').forEach(function(p){p.className=p.className;});}
+  document.getElementById('gd-status-badge').className='activation-badge ab-active';
+  document.getElementById('gd-status-badge').textContent='✓ Actif';
+  document.getElementById('btn-valider-garage').style.display='none';
+}
+function supprimerCurrentGarage(){
+  if(!confirm('Supprimer ce garage définitivement ?'))return;
+  if(currentGarageCard){currentGarageCard.remove();currentGarageCard=null;}
+  var navDetail=document.getElementById('nav-garage-detail');
+  if(navDetail)navDetail.style.display='none';
+  goBack();
+}
 function filterDashboard(val){var title=document.getElementById('dash-title');if(val==='all'){title.textContent='Tableau de bord — Réseau global';}else{var sel=document.getElementById('dash-garage-filter');var label=sel.options[sel.selectedIndex].text.replace(/^[^\s]+\s/,'');title.textContent='Tableau de bord — '+label;}}
+function filterByLang(lang){var rows=document.querySelectorAll('#screen-dashboard table tbody tr');rows.forEach(function(row){if(!lang||lang==='all'){row.style.display='';}else{var badge=row.querySelector('.lang-badge');var show=badge&&badge.classList.contains('lang-'+lang);row.style.display=show?'':'none';}});var sel=document.getElementById('dash-lang-filter');if(sel)sel.value=lang||'all';}
 function switchTab(el,id){document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));document.querySelectorAll('.tab-content').forEach(t=>t.classList.remove('active'));el.classList.add('active');document.getElementById('tab-'+id).classList.add('active')}
 function toggleAll(){const chips=document.querySelectorAll('.garage-chip');const allSel=Array.from(chips).every(c=>c.classList.contains('selected'));chips.forEach(c=>allSel?c.classList.remove('selected'):c.classList.add('selected'));updateCount()}
 function updateCount(){setTimeout(()=>{document.getElementById('selectedCount').textContent=document.querySelectorAll('.garage-chip.selected').length},50)}
@@ -958,10 +984,11 @@ function addGarageToSystem(name, city, langCode, langText){
     var exists=Array.from(selector.querySelectorAll('.garage-chip')).some(function(c){return c.textContent.replace('✓','').trim()===chipLabel;});
     if(!exists){
       var chip=document.createElement('div');
-      chip.className='garage-chip';
+      chip.className='garage-chip selected';
       chip.textContent=chipLabel;
       chip.onclick=function(){this.classList.toggle('selected');updateCount();};
       selector.appendChild(chip);
+      updateCount();
     }
   }
   // Filtre dashboard
@@ -984,7 +1011,7 @@ function addGarageToSystem(name, city, langCode, langText){
       var card=document.createElement('div');
       card.className='garage-card';
       card.style.cursor='pointer';
-      (function(n,c,f,lt){card.onclick=function(){openGarageDashboard(n,c+', · '+f+' '+lt,'ab-pending','⏳ En attente');};})(name,city,flag,langText);
+      (function(n,c,f,lt){card.onclick=function(){openGarageDashboard(n,c+' · '+f+' '+lt,'ab-pending','⏳ En attente');};})(name,city,flag,langText);
       card.innerHTML='<div class="garage-card-header"><div class="garage-icon">'+flag+'</div><span class="activation-badge ab-pending">⏳ En attente</span></div>'
         +'<div class="garage-name">'+name+'</div>'
         +'<div class="garage-location">📍 '+city+' · '+langText+'</div>'
@@ -1016,19 +1043,21 @@ function animateSimStats(){
     },interval);
   },3000);
 }
-function updateDashboardAfterPlan(titre,firstGarage,date,langBadge,fmt){
+function updateDashboardAfterPlan(titre,firstGarage,date,langBadge,fmt,platforms){
   // Incrémenter compteur planifiés
   var planCard=document.querySelector('#screen-dashboard .stat-card:nth-child(3) .stat-value');
   if(planCard)planCard.textContent=parseInt(planCard.textContent||'34')+1;
   // Ajouter dans publications récentes
   var tbody=document.querySelector('#screen-dashboard table tbody');
   if(tbody){
+    var plats=platforms&&platforms.length?platforms:['FB','IG','LI'];
+    var ptags=plats.map(function(p){return '<span class="ptag ptag-'+p.toLowerCase()+'">'+p+'</span>';}).join('');
     var row=document.createElement('tr');
     row.innerHTML='<td><strong>'+titre+'</strong></td>'
       +'<td>'+langBadge+'</td>'
       +'<td>'+fmt+'</td>'
       +'<td style="font-size:12px">'+firstGarage+'</td>'
-      +'<td><div class="platform-tags"><span class="ptag ptag-fb">FB</span><span class="ptag ptag-ig">IG</span><span class="ptag ptag-li">LI</span></div></td>'
+      +'<td><div class="platform-tags">'+ptags+'</div></td>'
       +'<td><span style="color:var(--muted)">—</span></td>'
       +'<td style="font-size:12px">'+date+'</td>'
       +'<td><span class="status-dot dot-yellow"></span>Planifiée</td>';
