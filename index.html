@@ -888,7 +888,7 @@ function updatePreviewImages(){
     var row=document.getElementById(cfg.id);
     if(!row||imgUrls.length===0)return;
     row.innerHTML='';
-    var limit=cfg.id==='preview-imgs-li'?1:imgUrls.length;
+    var limit=imgUrls.length;
     for(var i=0;i<limit&&i<imgUrls.length;i++){
       var d=document.createElement('div');
       d.className='preview-img';
@@ -1093,8 +1093,8 @@ function downloadReport(){
   var langText=langSel?langSel.options[langSel.selectedIndex].text:'Francais';
   var selectedGarages=document.querySelectorAll('.garage-chip.selected');
   var nbGarages=selectedGarages.length;
-  var rawChipDl=nbGarages>0?selectedGarages[0].textContent.replace('✓','').trim():'(aucun garage)';
-  var firstGarage=rawChipDl.replace(/^[\u{1F1E0}-\u{1F1FF}]{2}\s*/u,'').split(' — ')[0].trim()||rawChipDl;
+  var simNameEl=document.getElementById('sim-name-fb');
+  var firstGarage=simNameEl&&simNameEl.textContent.trim()?simNameEl.textContent.trim():(nbGarages>0?selectedGarages[0].textContent.replace('✓','').trim():'(aucun garage)');
   var fmt=imgUrls.length>1?'Carrousel - '+imgUrls.length+' images':'Photo unique';
   var now=new Date().toLocaleDateString('fr-CH',{day:'2-digit',month:'long',year:'numeric'});
   var esc=function(s){return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');};
@@ -1107,7 +1107,7 @@ function downloadReport(){
   } else {
     imgsHtml='<div style="padding:12px;background:#f0f7ff;border-radius:5px;font-size:12px;color:#6b7280">Aucune image ajoutee</div>';
   }
-  var liImgHtml=imgUrls.length>0?'<img src="'+imgUrls[0]+'" style="width:300px;height:170px;object-fit:cover;border-radius:5px">':imgsHtml;
+  var liImgHtml=imgUrls.length>0?imgsHtml:imgsHtml;
   var html='<!DOCTYPE html><html lang="fr"><head><meta charset="UTF-8"><title>DealerFlow Rapport</title>'
   +'<style>body{font-family:Arial,sans-serif;max-width:760px;margin:40px auto;color:#111;line-height:1.6;padding:0 20px}'
   +'.hdr{border-bottom:4px solid #2563eb;padding-bottom:18px;margin-bottom:26px;display:flex;justify-content:space-between}'
@@ -1137,7 +1137,7 @@ function downloadReport(){
   +'<tr><td>Langue</td><td>'+esc(langText)+'</td></tr>'
   +'<tr><td>Date planifiee</td><td>'+date+' a '+heure+'</td></tr>'
   +'<tr><td>Format</td><td>'+fmt+'</td></tr>'
-  +'<tr><td>Plateformes</td><td>Facebook - Instagram - LinkedIn</td></tr>'
+  +'<tr><td>Plateformes</td><td>'+getActivePlatforms().join(' - ')+'</td></tr>'
   +'<tr><td>Garages</td><td>'+nbGarages+' garage(s) selectionne(s)</td></tr>'
   +'</table>'
   +'<h2>Facebook</h2>'
