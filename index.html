@@ -130,7 +130,8 @@ tr:hover td{background:rgba(255,255,255,.015)}
 .format-chip.v2{background:rgba(245,158,11,.08);color:var(--warning);border:1px solid rgba(245,158,11,.2)}
 .format-chip.no{background:rgba(239,68,68,.08);color:var(--danger);border:1px solid rgba(239,68,68,.2)}
 .section-heading{font-family:'Syne',sans-serif;font-weight:700;font-size:15px;margin-bottom:14px;display:flex;align-items:center;justify-content:space-between}
-.tag{display:inline-block;font-size:11px;padding:3px 8px;border-radius:20px;background:var(--surface2);color:var(--muted);border:1px solid var(--border)}
+.tag{display:inline-block;font-size:11px;padding:3px 8px;border-radius:20px;background:var(--surface2);color:var(--muted);border:1px solid var(--border);cursor:pointer}
+.tag-active{background:rgba(37,99,235,.15);color:var(--accent-light);border-color:var(--accent)}
 .garage-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}
 .garage-card{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:18px;transition:border-color .2s}
 .garage-card:hover{border-color:var(--accent)}
@@ -591,15 +592,15 @@ tr:hover td{background:rgba(255,255,255,.015)}
     <div class="table-card">
       <div class="table-header">
         <div class="table-title">48 annonces</div>
-        <div style="display:flex;gap:6px"><span class="tag">Toutes</span><span class="tag">🇫🇷 FR</span><span class="tag">🇩🇪 DE</span><span class="tag">🇮🇹 IT</span><span class="tag">Communes</span></div>
+        <div style="display:flex;gap:6px" id="annonces-filter-tags"><span class="tag tag-active" onclick="filterAnnonces('all',this)">Toutes</span><span class="tag" onclick="filterAnnonces('fr',this)">🇫🇷 FR</span><span class="tag" onclick="filterAnnonces('de',this)">🇩🇪 DE</span><span class="tag" onclick="filterAnnonces('it',this)">🇮🇹 IT</span><span class="tag" onclick="filterAnnonces('commune',this)">Communes</span></div>
       </div>
       <table>
         <thead><tr><th>Annonce</th><th>Garage(s)</th><th>Langue</th><th>Format</th><th>Diffusion</th><th>Stats</th><th>Publication</th><th>Statut</th></tr></thead>
         <tbody>
-          <tr><td><strong>Mazda CX-5 — 35 900.- CHF</strong></td><td style="font-size:12px">Garage du Lac, Lausanne</td><td><span class="lang-badge lang-fr">FR</span></td><td><span class="fmt-badge carousel">⊞ Carrousel</span></td><td><span class="tag">4 garages</span></td><td><div class="mini-stats"><div class="mini-stat">❤️ <span>84</span></div><div class="mini-stat">👁 <span>1 240</span></div></div></td><td style="font-size:12px">20 mars · 09:00</td><td><span class="status-dot dot-green"></span>Publiée</td></tr>
-          <tr><td><strong>Mazda3 Hatchback — 27 900.- CHF</strong></td><td style="font-size:12px">Zürich Auto Center</td><td><span class="lang-badge lang-de">DE</span></td><td><span class="fmt-badge carousel">⊞ Carrousel</span></td><td><span class="tag">2 garages DE</span></td><td><div class="mini-stats"><div class="mini-stat">❤️ <span>57</span></div><div class="mini-stat">👁 <span>890</span></div></div></td><td style="font-size:12px">20 mars · 10:00</td><td><span class="status-dot dot-green"></span>Publiée</td></tr>
-          <tr><td><strong>Mazda MX-5 — 32 400.- CHF</strong></td><td style="font-size:12px">Lugano Cars Sàrl</td><td><span class="lang-badge lang-it">IT</span></td><td><span class="fmt-badge photo">▣ Photo</span></td><td><span class="tag">3 garages IT</span></td><td><span style="color:var(--muted)">—</span></td><td style="font-size:12px">21 mars · 09:00</td><td><span class="status-dot dot-yellow"></span>Planifiée</td></tr>
-          <tr><td><strong>Mazda CX-80 — 59 900.- CHF</strong></td><td style="font-size:12px">AutoLéman, Genève</td><td><span class="lang-badge lang-fr">FR</span></td><td><span class="fmt-badge carousel">⊞ Carrousel</span></td><td><span class="tag">9 garages</span></td><td><span style="color:var(--muted)">—</span></td><td style="font-size:12px">22 mars · 09:00</td><td><span class="status-dot dot-yellow"></span>Planifiée</td></tr>
+          <tr data-lang="fr"><td><strong>Mazda CX-5 — 35 900.- CHF</strong></td><td style="font-size:12px">Garage du Lac, Lausanne</td><td><span class="lang-badge lang-fr">FR</span></td><td><span class="fmt-badge carousel">⊞ Carrousel</span></td><td><span class="tag">4 garages</span></td><td><div class="mini-stats"><div class="mini-stat">❤️ <span>84</span></div><div class="mini-stat">👁 <span>1 240</span></div></div></td><td style="font-size:12px">20 mars · 09:00</td><td><span class="status-dot dot-green"></span>Publiée</td></tr>
+          <tr data-lang="de"><td><strong>Mazda3 Hatchback — 27 900.- CHF</strong></td><td style="font-size:12px">Zürich Auto Center</td><td><span class="lang-badge lang-de">DE</span></td><td><span class="fmt-badge carousel">⊞ Carrousel</span></td><td><span class="tag">2 garages DE</span></td><td><div class="mini-stats"><div class="mini-stat">❤️ <span>57</span></div><div class="mini-stat">👁 <span>890</span></div></div></td><td style="font-size:12px">20 mars · 10:00</td><td><span class="status-dot dot-green"></span>Publiée</td></tr>
+          <tr data-lang="it"><td><strong>Mazda MX-5 — 32 400.- CHF</strong></td><td style="font-size:12px">Lugano Cars Sàrl</td><td><span class="lang-badge lang-it">IT</span></td><td><span class="fmt-badge photo">▣ Photo</span></td><td><span class="tag">3 garages IT</span></td><td><span style="color:var(--muted)">—</span></td><td style="font-size:12px">21 mars · 09:00</td><td><span class="status-dot dot-yellow"></span>Planifiée</td></tr>
+          <tr data-lang="fr"><td><strong>Mazda CX-80 — 59 900.- CHF</strong></td><td style="font-size:12px">AutoLéman, Genève</td><td><span class="lang-badge lang-fr">FR</span></td><td><span class="fmt-badge carousel">⊞ Carrousel</span></td><td><span class="tag">9 garages</span></td><td><span style="color:var(--muted)">—</span></td><td style="font-size:12px">22 mars · 09:00</td><td><span class="status-dot dot-yellow"></span>Planifiée</td></tr>
         </tbody>
       </table>
     </div>
@@ -612,7 +613,7 @@ tr:hover td{background:rgba(255,255,255,.015)}
     <div class="topbar-title">Statistiques marketing</div>
     <div style="display:flex;gap:8px">
       <select style="background:var(--surface2);border:1px solid var(--border);border-radius:8px;padding:6px 11px;color:var(--text);font-size:13px;outline:none"><option>Ce mois</option><option>7 jours</option><option>3 mois</option></select>
-      <select style="background:var(--surface2);border:1px solid var(--border);border-radius:8px;padding:6px 11px;color:var(--text);font-size:13px;outline:none"><option>Toutes langues</option><option>🇫🇷 Français</option><option>🇩🇪 Deutsch</option><option>🇮🇹 Italiano</option></select>
+      <select id="stats-lang-select" onchange="filterStats(this.value)" style="background:var(--surface2);border:1px solid var(--border);border-radius:8px;padding:6px 11px;color:var(--text);font-size:13px;outline:none"><option value="all">Toutes langues</option><option value="fr">🇫🇷 Français</option><option value="de">🇩🇪 Deutsch</option><option value="it">🇮🇹 Italiano</option></select>
     </div>
   </div>
   <div class="content">
@@ -622,26 +623,26 @@ tr:hover td{background:rgba(255,255,255,.015)}
       <div class="stats-big-card"><div class="sbc-icon">💬</div><div class="sbc-val">412</div><div class="sbc-lbl">Commentaires</div><div class="sbc-delta delta-down">↓ -3% vs mois dernier</div></div>
       <div class="stats-big-card"><div class="sbc-icon">🖱</div><div class="sbc-val">1 890</div><div class="sbc-lbl">Clics</div><div class="sbc-delta delta-up">↑ +31% vs mois dernier</div></div>
     </div>
-    <div class="table-card" style="margin-bottom:18px">
+    <div class="table-card" id="stats-perf-table" style="margin-bottom:18px">
       <div class="table-header"><div class="table-title">Performance par langue — Suisse</div></div>
       <table>
         <thead><tr><th>Langue</th><th>Garages</th><th>Posts</th><th>Likes</th><th>Impressions</th><th>Engagement</th></tr></thead>
         <tbody>
-          <tr><td>🇫🇷 Français (Lausanne, Genève, Neuchâtel)</td><td>3</td><td>68</td><td>1 640</td><td>24 200</td><td><span class="stat-badge badge-green">5.2%</span></td></tr>
-          <tr><td>🇩🇪 Deutsch (Zürich, Thun, Basel)</td><td>3</td><td>71</td><td>1 180</td><td>17 300</td><td><span class="stat-badge badge-green">4.1%</span></td></tr>
-          <tr><td>🇮🇹 Italiano (Lugano, Bellinzona, Locarno)</td><td>3</td><td>48</td><td>420</td><td>7 200</td><td><span class="stat-badge badge-yellow">3.8%</span></td></tr>
+          <tr data-lang="fr"><td>🇫🇷 Français (Lausanne, Genève, Neuchâtel)</td><td>3</td><td>68</td><td>1 640</td><td>24 200</td><td><span class="stat-badge badge-green">5.2%</span></td></tr>
+          <tr data-lang="de"><td>🇩🇪 Deutsch (Zürich, Thun, Basel)</td><td>3</td><td>71</td><td>1 180</td><td>17 300</td><td><span class="stat-badge badge-green">4.1%</span></td></tr>
+          <tr data-lang="it"><td>🇮🇹 Italiano (Lugano, Bellinzona, Locarno)</td><td>3</td><td>48</td><td>420</td><td>7 200</td><td><span class="stat-badge badge-yellow">3.8%</span></td></tr>
         </tbody>
       </table>
     </div>
     <div class="table-card">
-      <div class="table-header"><div class="table-title">Top annonces — ce mois</div></div>
+      <div class="table-header"><div id="stats-top-table" class="table-title">Top annonces — ce mois</div></div>
       <table>
         <thead><tr><th>Annonce</th><th>Langue</th><th>Format</th><th>Likes</th><th>Impressions</th><th>Clics</th></tr></thead>
         <tbody>
-          <tr><td><strong>Mazda CX-60 PHEV — 52 900.- CHF</strong></td><td><span class="lang-badge lang-fr">FR</span></td><td><span class="fmt-badge carousel">⊞ Carrousel</span></td><td>312</td><td>4 800</td><td>230</td></tr>
-          <tr><td><strong>Mazda CX-5 — 35 900.- CHF</strong></td><td><span class="lang-badge lang-fr">FR</span></td><td><span class="fmt-badge carousel">⊞ Carrousel</span></td><td>221</td><td>3 600</td><td>156</td></tr>
-          <tr><td><strong>Mazda3 Hatchback — 27 900.- CHF</strong></td><td><span class="lang-badge lang-de">DE</span></td><td><span class="fmt-badge carousel">⊞ Carrousel</span></td><td>198</td><td>2 900</td><td>120</td></tr>
-          <tr><td><strong>Mazda MX-5 — 32 400.- CHF</strong></td><td><span class="lang-badge lang-it">IT</span></td><td><span class="fmt-badge photo">▣ Photo</span></td><td>164</td><td>2 600</td><td>108</td></tr>
+          <tr data-lang="fr"><td><strong>Mazda CX-60 PHEV — 52 900.- CHF</strong></td><td><span class="lang-badge lang-fr">FR</span></td><td><span class="fmt-badge carousel">⊞ Carrousel</span></td><td>312</td><td>4 800</td><td>230</td></tr>
+          <tr data-lang="fr"><td><strong>Mazda CX-5 — 35 900.- CHF</strong></td><td><span class="lang-badge lang-fr">FR</span></td><td><span class="fmt-badge carousel">⊞ Carrousel</span></td><td>221</td><td>3 600</td><td>156</td></tr>
+          <tr data-lang="de"><td><strong>Mazda3 Hatchback — 27 900.- CHF</strong></td><td><span class="lang-badge lang-de">DE</span></td><td><span class="fmt-badge carousel">⊞ Carrousel</span></td><td>198</td><td>2 900</td><td>120</td></tr>
+          <tr data-lang="it"><td><strong>Mazda MX-5 — 32 400.- CHF</strong></td><td><span class="lang-badge lang-it">IT</span></td><td><span class="fmt-badge photo">▣ Photo</span></td><td>164</td><td>2 600</td><td>108</td></tr>
         </tbody>
       </table>
     </div>
@@ -758,6 +759,25 @@ tr:hover td{background:rgba(255,255,255,.015)}
 </div>
 <script>
 
+function filterAnnonces(lang,el){
+  document.querySelectorAll('#annonces-filter-tags .tag').forEach(function(t){t.classList.remove('tag-active');});
+  el.classList.add('tag-active');
+  document.querySelectorAll('#screen-annonces table tbody tr').forEach(function(row){
+    if(lang==='all'){row.style.display='';}
+    else if(lang==='commune'){row.style.display=(!row.dataset.lang||row.dataset.lang==='commune')?'':'';}
+    else{row.style.display=(row.dataset.lang===lang)?'':'none';}
+  });
+}
+function filterStats(lang){
+  document.querySelectorAll('#stats-perf-table tbody tr').forEach(function(row){
+    row.style.display=(lang==='all'||row.dataset.lang===lang)?'':'none';
+  });
+  document.querySelectorAll('#stats-top-table').forEach(function(el){
+    el.closest('.table-card').querySelectorAll('tbody tr').forEach(function(row){
+      row.style.display=(lang==='all'||row.dataset.lang===lang)?'':'none';
+    });
+  });
+}
 function showScreen(name,navEl){document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));document.querySelectorAll('.nav-item').forEach(n=>n.classList.remove('active'));document.getElementById('screen-'+name).classList.add('active');if(navEl)navEl.classList.add('active')}
 function goBack(){var navGarages=document.getElementById('nav-garages');showScreen('garages',navGarages)}
 var imgUrls=[];
@@ -865,7 +885,9 @@ function planifierAnnonce(){
   var tbody=document.querySelector('#screen-annonces table tbody');
   if(tbody){
     var fmt=imgUrls.length>1?'<span class="fmt-badge carousel">⊞ Carrousel</span>':'<span class="fmt-badge photo">▣ Photo</span>';
+    var langKey=langText.includes('Deutsch')?'de':langText.includes('Italiano')?'it':'fr';
     var row=document.createElement('tr');
+    row.dataset.lang=langKey;
     row.innerHTML='<td><strong>'+titre+(prix?' — '+prix+' CHF':'')+'</strong></td>'
       +'<td style="font-size:12px">'+firstGarage+'</td>'
       +'<td>'+langBadge+'</td>'
