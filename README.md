@@ -1,5 +1,7 @@
 # AutoPost — Plateforme de publication automatisée
 
+# MOT DE PASSE : wikigo2025
+
 > Maquette interactive d'une solution de gestion et publication de contenu 
 > sur les réseaux sociaux pour un réseau de garages automobiles.
 
